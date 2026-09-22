@@ -1,0 +1,8 @@
+import React from 'react';
+import { asset } from '../lib/assets';
+import Feature from '../components/common/Feature';
+import ProductShowcase from './ProductShowcase';
+
+function Home({ go }) { return <main><section className="hero"><div><p className="eyebrow">HANDMADE • PERSONALIZED • MADE WITH LOVE</p><h1>Chạm vào cá tính,<br /><em>Chạm Ý</em> cá nhân.</h1><p className="lead">Tự chọn, tự phối và tạo nên món phụ kiện mang dấu ấn rất riêng của bạn.</p><button className="primary" onClick={() => go('customize')}>Khám phá tự phối <span>→</span></button></div><div className="hero-art"><div className="orbit">✦</div><div className="hero-card"><img src={asset('khung-thiet-ke.jpg')} /></div><span className="sticker">made<br />for you ♡</span></div></section><section className="intro"><div><p className="eyebrow">VỀ CHẠM Ý</p><h2>Tạo nên <em>cái riêng</em><br />của bạn.</h2></div><p>Chạm Ý là thương hiệu móc khóa handmade cá nhân hóa, nơi bạn có thể tự chọn và phối charm, màu sắc, chữ và concept theo sở thích để tạo nên một món phụ kiện mang dấu ấn riêng.</p></section><section className="features"><Feature icon="✦" title="Concept có sẵn" text="Những mẫu đã được Chạm Ý phối sẵn." /><Feature icon="✿" title="Tự phối" text="Tự chọn charm, màu sắc, chữ và cách phối." /><Feature icon="♡" title="Cá nhân hóa" text="Tạo sản phẩm theo sở thích của mình." /><Feature icon="➜" title="Đồng hành" text="Chạm Ý hướng dẫn trong quá trình lựa chọn." /></section><ProductShowcase go={go} /></main>; }
+export default Home;
+

@@ -1,0 +1,6 @@
+import React from 'react';
+import { asset } from '../lib/assets';
+
+function Guide() { return <main className="page guide"><div className="page-intro centered"><p className="eyebrow">HƯỚNG DẪN</p><h1>Bạn nên bắt đầu<br /><em>từ đâu?</em></h1><p>Chọn concept có sẵn nếu bạn muốn nhanh chóng có một mẫu hoàn chỉnh. Hoặc tự phối nếu bạn muốn tạo một sản phẩm mang dấu ấn riêng.</p></div><div className="steps">{[['01', 'CHỌN', 'Chọn loại sản phẩm.'], ['02', 'PHỐI', 'Chọn màu, dây, chữ và charm.'], ['03', 'TẠO', 'Chạm Ý hoàn thiện sản phẩm theo lựa chọn.'], ['04', 'NHẬN', 'Nhận món phụ kiện mang dấu ấn riêng.']].map(([n, t, d]) => <article key={n}><span>{n}</span><h3>{t}</h3><p>{d}</p></article>)}</div><section className="order-guide"><div><p className="eyebrow">CÁCH ĐẶT MỘT SẢN PHẨM</p><h2>Đặt món thật dễ,<br /><em>chỉ với 5 bước.</em></h2></div><ol>{['Chọn sản phẩm hoặc tự phối món của bạn.', 'Chọn / điền thông tin cá nhân hóa.', 'Gửi thông tin và ảnh preview cho Chạm Ý.', 'Chạm Ý xác nhận lại đơn hàng.', 'Hoàn thiện và giao sản phẩm đến bạn.'].map((x, i) => <li key={x}><b>0{i + 1}</b><span>{x}</span></li>)}</ol></section><img className="guide-image" src={asset('khung-preview.jpg')} /></main>; }
+export default Guide;
+

@@ -1,0 +1,7 @@
+import React from 'react';
+import { asset } from '../../lib/assets';
+import { charms } from '../../data/siteData';
+
+function Preview({ selected, letters, pack }) { const chars = (letters || 'TÊN').replace(/\s/g, '').split(''); const charmCount = pack === 'individual' ? Math.max(selected.length, 3) : 3; const previewHeight = Math.max(620, 340 + charmCount * 53, 340 + chars.length * 53); return <div className="live-preview" style={{ minHeight: previewHeight }}><div className="preview-title">MÓN CỦA BẠN <span>LIVE PREVIEW</span></div><div className="preview-tree"><div className="tree-ring">○</div><div className="tree-knot"></div><div className="tree-arms"><div className="tree-arm" style={{ "--charm-count": pack === "individual" ? Math.max(selected.length, 3) : 3 }}><b>Nhánh 1</b><div className="branch-slots">{Array.from({ length: pack === 'individual' ? selected.length : 3 }).map((_, i) => { const c = charms.find((x) => x.id === selected[i]); return <span className={c ? `slot-filled ${c.tone}` : 'slot-empty'} key={i}>{c?.icon || i + 1}</span>; })}</div><div className="branch-tassel"><i></i><i></i><i></i></div></div><div className="tree-arm" style={{ '--letter-count': chars.length }}><b>Nhánh 2</b><div className="letter-stack">{chars.map((c, i) => <span key={`${c}-${i}`}>{c}</span>)}</div><div className="branch-tassel"><i></i><i></i><i></i></div></div><div className="tree-arm"><b>Nhánh 3</b><div className="preview-logo"><img src={asset('logoChamY-removebg-preview.png')} /></div></div></div></div></div>; }
+export default Preview;
+
