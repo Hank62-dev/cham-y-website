@@ -259,3 +259,5 @@ nav button{font-size:14px}
   .product-info{padding-bottom:28px}
   .card-link{bottom:8px}
 }
+/* Keep tassels in normal flow so the saved preview matches the live preview. */
+.tree-arm:nth-child(1) .branch-tassel,.tree-arm:nth-child(2) .branch-tassel{position:relative;top:auto!important;left:auto;right:auto;margin-top:10px;transform:translateX(0);flex:0 0 auto}
