@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { ArrowUpRight, X } from 'lucide-react';
 import { charmPrice, charms, namePrices } from '../../data/siteData';
 import { asset } from '../../lib/assets';
@@ -6,7 +7,8 @@ import { money } from '../../lib/formatters';
 function Payment({ total, pack, selected = [], letters, product, readyMade = false, customOrder = false, cordPrice = 0, specialSelected = [], specialCharms = [], close }) {
   const packagePrice = pack === 'combo' ? 47_000 : 23_000;
 
-  return (
+  return createPortal(
+    (
     <div className="modal-backdrop" role="presentation" onClick={close}>
       <div className="payment-modal" role="dialog" aria-modal="true" aria-label="Xác nhận thanh toán" onClick={(event) => event.stopPropagation()}>
         <button className="close" type="button" onClick={close} aria-label="Đóng thanh toán"><X size={20} /></button>
@@ -42,6 +44,8 @@ function Payment({ total, pack, selected = [], letters, product, readyMade = fal
         </div>
       </div>
     </div>
+    ),
+    document.body,
   );
 }
 

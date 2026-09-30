@@ -12,6 +12,7 @@ const cordColors = [
   { id: 'yellow', name: 'Vàng sáng', value: '#ffd43d' },
   { id: 'pink', name: 'Hồng sáng', value: '#ff78b5' },
   { id: 'blue', name: 'Xanh dương sáng', value: '#4da3ff' },
+  { id: 'green', name: 'Xanh lá Chạm Ý', value: '#2f5b32' },
   { id: 'white', name: 'Trắng', value: '#fffdf7' },
 ];
 
@@ -88,7 +89,7 @@ function Customize() {
 
           <OptionTitle no="05" title="Thanh toán" note="Kiểm tra lại trước khi gửi đơn" />
           <div className="running-total"><span>Tạm tính</span><strong>{money(total)}</strong></div>
-          <button className="primary custom-payment-button" type="button" onClick={submit}>Đi đến trang thanh toán <ArrowRight size={17} /></button>
+          <button className="primary bubble-button custom-payment-button" type="button" onClick={submit}>Đi đến trang thanh toán <ArrowRight size={17} /></button>
           {validationError && <p className="form-error" role="alert">{validationError}</p>}
         </div>
       </div>

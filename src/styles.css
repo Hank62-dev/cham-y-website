@@ -361,6 +361,63 @@ nav button{font-size:14px}
 @keyframes heroCtaShine{0%,30%{transform:translate3d(-115%,0,0)}58%,100%{transform:translate3d(115%,0,0)}}
 @media(prefers-reduced-motion:reduce){.scroll-reveal{opacity:1;transform:none;transition:none}.hero.scroll-reveal.is-visible>div:first-child,.hero .primary:after,.hero .primary:hover:before{animation:none}}
 
+/* Payment must sit above every page layer, including the contact footer. */
+.modal-backdrop{z-index:2147483647;isolation:isolate;overflow-y:auto}
+.payment-modal{max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain}
+
+/* Green bubble treatment for the product-detail purchase CTA. */
+.detail-actions .primary.bubble-button{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  background:radial-gradient(circle at 18% 17%,rgba(255,255,255,.55) 0 3px,transparent 4px),linear-gradient(145deg,#58805b 0%,#2f5b32 66%,#234827 100%);
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.2),inset -6px -7px 0 rgba(24,56,30,.28),0 6px 0 #234827,0 10px 20px rgba(47,91,50,.18);
+  transition:transform .3s ease,box-shadow .3s ease,background .3s ease;
+}
+.detail-actions .primary.bubble-button::before{
+  inset:7px auto auto 13px;
+  width:22px;
+  height:12px;
+  border-radius:50%;
+  opacity:1;
+  background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(255,255,255,0));
+  box-shadow:29px 11px 0 -4px rgba(255,255,255,.52),66px 1px 0 -7px rgba(255,255,255,.68);
+  transform:rotate(-22deg);
+}
+.detail-actions .primary.bubble-button:hover:not(:disabled){
+  transform:translateY(-3px);
+  background:radial-gradient(circle at 18% 17%,rgba(255,255,255,.75) 0 3px,transparent 4px),linear-gradient(145deg,#6c9870 0%,#3b7042 66%,#2b5631 100%);
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.28),inset -6px -7px 0 rgba(24,56,30,.24),0 8px 0 #234827,0 14px 25px rgba(47,91,50,.26);
+}
+.detail-actions .primary.bubble-button:active:not(:disabled){transform:translateY(2px);box-shadow:inset 3px 3px 0 rgba(255,255,255,.2),inset -6px -7px 0 rgba(24,56,30,.28),0 3px 0 #234827,0 6px 12px rgba(47,91,50,.16)}
+
+.detail-actions .secondary.bubble-button{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  border:0;
+  color:#fff;
+  background:radial-gradient(circle at 18% 17%,rgba(255,255,255,.58) 0 3px,transparent 4px),linear-gradient(145deg,#ff9dcc 0%,#e33fa9 66%,#b92d82 100%);
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.28),inset -6px -7px 0 rgba(126,24,87,.24),0 6px 0 #a92774,0 10px 20px rgba(185,45,130,.2);
+  transition:transform .3s ease,box-shadow .3s ease,background .3s ease;
+}
+.detail-actions .secondary.bubble-button::before{
+  inset:7px auto auto 13px;
+  width:22px;
+  height:12px;
+  border-radius:50%;
+  opacity:1;
+  background:linear-gradient(145deg,rgba(255,255,255,.85),rgba(255,255,255,0));
+  box-shadow:29px 11px 0 -4px rgba(255,255,255,.55),66px 1px 0 -7px rgba(255,255,255,.7);
+  transform:rotate(-22deg);
+}
+.detail-actions .secondary.bubble-button:hover{
+  transform:translateY(-3px);
+  background:radial-gradient(circle at 18% 17%,rgba(255,255,255,.78) 0 3px,transparent 4px),linear-gradient(145deg,#ffb1d5 0%,#ed54b2 66%,#c6388e 100%);
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.34),inset -6px -7px 0 rgba(126,24,87,.22),0 8px 0 #a92774,0 14px 25px rgba(185,45,130,.28);
+}
+.detail-actions .secondary.bubble-button:active{transform:translateY(2px);box-shadow:inset 3px 3px 0 rgba(255,255,255,.25),inset -6px -7px 0 rgba(126,24,87,.24),0 3px 0 #a92774,0 6px 12px rgba(185,45,130,.18)}
+
 /* Premium page atmosphere, intentionally excluded from the customizer. */
 main:not(.customizer){position:relative;isolation:isolate;overflow:clip}
 main:not(.customizer)::before{content:'';position:absolute;z-index:-1;inset:0;pointer-events:none;background:radial-gradient(circle at 8% 8%,rgba(227,63,169,.055),transparent 24%),radial-gradient(circle at 92% 38%,rgba(168,202,19,.055),transparent 20%);animation:ambientDrift 16s ease-in-out infinite alternate}
@@ -490,3 +547,146 @@ main:not(.customizer) .product-card:hover .product-image::after{transform:transl
 /* Home CTA: glossy green bubble by default, glossy pink on hover. */
 .hero .primary{background:radial-gradient(circle at 20% 18%,rgba(255,255,255,.6) 0 3px,transparent 4px),linear-gradient(145deg,#587d5b 0%,#2f5b32 68%,#234827 100%);box-shadow:inset 3px 3px 0 rgba(255,255,255,.2),inset -6px -7px 0 rgba(24,56,30,.28),0 6px 0 #234827,0 10px 20px rgba(47,91,50,.18)}
 .hero .primary:hover{background:radial-gradient(circle at 20% 18%,rgba(255,255,255,.82) 0 3px,transparent 4px),linear-gradient(145deg,#ff9dcc 0%,#e33fa9 68%,#b92d82 100%);box-shadow:inset 3px 3px 0 rgba(255,255,255,.3),inset -6px -7px 0 rgba(126,24,87,.25),0 7px 0 #a92774,0 13px 25px rgba(185,45,130,.28)}
+
+/* Customizer payment CTA uses the system green bubble style. */
+.custom-payment-button{
+  background:radial-gradient(circle at 20% 18%,rgba(255,255,255,.6) 0 3px,transparent 4px),linear-gradient(145deg,#587d5b 0%,#2f5b32 68%,#234827 100%);
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.2),inset -6px -7px 0 rgba(24,56,30,.28),0 6px 0 #234827,0 10px 20px rgba(47,91,50,.18);
+}
+.custom-payment-button:hover{
+  background:radial-gradient(circle at 20% 18%,rgba(255,255,255,.82) 0 3px,transparent 4px),linear-gradient(145deg,#6e9671 0%,#3d7042 68%,#2b5631 100%);
+  color:#fff;
+  border-color:#2f5b32;
+  transform:translate3d(0,-3px,0);
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.3),inset -6px -7px 0 rgba(24,56,30,.25),0 7px 0 #234827,0 13px 25px rgba(47,91,50,.28);
+}
+
+/* Replace the shared pink page block with a soft, borderless color wash. */
+main:not(.customizer)::before{
+  inset:-16%;
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(255,151,198,.13) 0%,rgba(255,151,198,.055) 28%,transparent 58%),
+    radial-gradient(ellipse at 86% 24%,rgba(168,202,19,.09) 0%,rgba(168,202,19,.035) 24%,transparent 55%),
+    radial-gradient(ellipse at 58% 82%,rgba(116,178,139,.07) 0%,transparent 52%),
+    linear-gradient(120deg,#fff9f2 0%,#fffaf5 48%,#fdf8ef 100%);
+  filter:blur(38px);
+  opacity:.82;
+  transform:scale(1.08);
+}
+
+/* Keep the color wash global instead of clipping it to the bounded .page. */
+body{
+  position:relative;
+  isolation:isolate;
+}
+body::before{
+  content:'';
+  position:fixed;
+  z-index:-1;
+  inset:-18%;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 10% 18%,rgba(255,151,198,.13) 0%,rgba(255,151,198,.05) 27%,transparent 56%),
+    radial-gradient(ellipse at 88% 22%,rgba(168,202,19,.08) 0%,rgba(168,202,19,.03) 25%,transparent 55%),
+    radial-gradient(ellipse at 52% 82%,rgba(116,178,139,.06) 0%,transparent 52%),
+    linear-gradient(120deg,#fff9f2 0%,#fffaf5 48%,#fdf8ef 100%);
+  filter:blur(42px);
+  opacity:.9;
+  transform:scale(1.08);
+  animation:ambientDrift 16s ease-in-out infinite alternate;
+}
+main:not(.customizer)::before{display:none}
+
+/* Make card lift feedback feel quicker on hover. */
+main:not(.customizer) .feature,
+main:not(.customizer) .steps article,
+main:not(.customizer) .benefit-list article{
+  transition-duration:.28s;
+  transition-timing-function:cubic-bezier(.2,.8,.25,1);
+}
+
+/* Product cards lift diagonally with a smoother, more noticeable hover. */
+main:not(.customizer) .product-grid .product-card{
+  transition:transform .36s cubic-bezier(.2,.8,.25,1),box-shadow .36s cubic-bezier(.2,.8,.25,1);
+}
+main:not(.customizer) .product-grid .product-card:hover{
+  transform:none!important;
+  box-shadow:0 8px 25px #2f5b3210!important;
+}
+
+main:not(.customizer) .feature:hover{
+  box-shadow:0 18px 38px rgba(227,63,169,.11),0 0 26px rgba(255,151,207,.16)!important;
+}
+
+/* Back link stays clean and only glides slightly left on hover. */
+.product-detail .back-link{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:transparent!important;
+  box-shadow:none!important;
+  transition:transform 2s cubic-bezier(.16,1,.3,1),color .5s ease;
+}
+.product-detail .back-link:hover{
+  transform:translate3d(-8px,0,0)!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:var(--green)!important;
+}
+
+/* Soft pink shine sweep across the instruction cards on hover. */
+.steps article::before{
+  content:'';
+  position:absolute;
+  z-index:1;
+  top:-25%;
+  bottom:-25%;
+  left:-48%;
+  width:50%;
+  pointer-events:none;
+  background:linear-gradient(105deg,transparent 0%,rgba(255,178,219,.08) 14%,rgba(255,178,219,.32) 30%,rgba(255,151,207,.7) 45%,rgba(255,208,232,.9) 50%,rgba(255,151,207,.62) 57%,rgba(255,178,219,.28) 72%,rgba(255,178,219,.06) 88%,transparent 100%);
+  filter:blur(14px);
+  box-shadow:0 0 30px rgba(255,119,195,.58),0 0 64px rgba(255,119,195,.34),0 0 92px rgba(255,181,221,.24);
+  transform:translateX(-180%) skewX(-16deg);
+  opacity:0;
+}
+.steps article:hover::before{
+  opacity:1;
+  animation:stepsPinkShine .72s cubic-bezier(.2,.7,.25,1) both;
+}
+@keyframes stepsPinkShine{
+  from{transform:translateX(-180%) skewX(-16deg)}
+  to{transform:translateX(720%) skewX(-16deg)}
+}
+
+/* The about-page logo gently floats, then glides left on hover. */
+.about-mark img{
+  animation:aboutLogoFloat 3.6s ease-in-out infinite;
+  will-change:transform;
+}
+@keyframes aboutLogoFloat{
+  0%,100%{transform:translate3d(0,0,0)}
+  50%{transform:translate3d(0,-9px,0)}
+}
+.about-copy .quote{
+  transition:transform .7s cubic-bezier(.2,.8,.25,1),box-shadow .7s ease;
+  will-change:transform;
+}
+.about-copy .quote:hover{
+  transform:translate3d(16px,0,0);
+}
+
+/* Subtle, smooth zoom for product-detail artwork. */
+.product-detail .detail-visual img{
+  transform:scale(2.3);
+  transition:transform 1s cubic-bezier(.16,1,.3,1),filter 1s ease;
+  will-change:transform;
+}
+.product-detail .detail-visual:hover img{
+  transform:scale(2.42);
+  filter:saturate(1.05) contrast(1.02);
+}
+@media(max-width:800px){
+  .product-detail .detail-visual img{transform:scale(2)}
+  .product-detail .detail-visual:hover img{transform:scale(2.1)}
+}

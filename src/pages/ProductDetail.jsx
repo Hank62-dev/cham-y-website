@@ -37,8 +37,8 @@ function ProductDetail({ go, productId }) {
           {letters.length >= 2 && <p className="name-price-hint">{letters.length} chữ · {money(price)}</p>}
           <div className="detail-total"><span>Giá sản phẩm</span><strong>{price ? money(price) : 'Chọn tên để xem giá'}</strong></div>
           <div className="detail-actions">
-            <button className="primary" type="button" disabled={!price} onClick={() => setIsPaymentOpen(true)}>Mua hàng <ArrowRight size={17} /></button>
-            <button className="secondary" type="button" onClick={() => go('customize')}>Tự phối lại</button>
+            <button className="primary bubble-button" type="button" disabled={!price} onClick={() => setIsPaymentOpen(true)}>Mua hàng <ArrowRight size={17} /></button>
+            <button className="secondary bubble-button" type="button" onClick={() => go('customize')}>Tự phối lại</button>
           </div>
         </div>
       </div>
