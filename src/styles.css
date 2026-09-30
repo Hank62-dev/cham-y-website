@@ -344,3 +344,134 @@ nav button{font-size:14px}
   .footer-contact,.footer-hours{width:100%}
   .contact-actions{justify-content:center}
 }
+
+/* Scroll-triggered reveal: elements animate only as they enter the viewport. */
+.scroll-reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity .8s var(--motion-ease),transform .8s var(--motion-ease);animation:none!important;will-change:opacity,transform}
+.scroll-reveal.is-visible{opacity:1;transform:translate3d(0,0,0)}
+.scroll-reveal:nth-child(2){transition-delay:.06s}.scroll-reveal:nth-child(3){transition-delay:.12s}.scroll-reveal:nth-child(4){transition-delay:.18s}.scroll-reveal:nth-child(5){transition-delay:.24s}
+.hero.scroll-reveal.is-visible>div:first-child{animation:heroCopyFloat 6.5s ease-in-out .75s infinite!important}
+@keyframes heroCopyFloat{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-5px,0)}}
+.hero .primary{position:relative;isolation:isolate;overflow:hidden;transition:background-color .45s var(--motion-ease),transform .45s var(--motion-ease),box-shadow .45s var(--motion-ease),color .3s ease}
+.hero .primary>*{position:relative;z-index:2}
+.hero .primary:hover{background:var(--pink);color:#fff;transform:translate3d(8px,0,0);box-shadow:0 12px 26px rgba(227,63,169,.28),0 0 0 5px rgba(227,63,169,.08)}
+.hero .primary:before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(circle at 13% 76%,rgba(255,255,255,.75) 0 3px,transparent 4px),radial-gradient(circle at 28% 88%,rgba(255,255,255,.62) 0 4px,transparent 5px),radial-gradient(circle at 61% 80%,rgba(255,255,255,.72) 0 3px,transparent 4px),radial-gradient(circle at 82% 92%,rgba(255,255,255,.58) 0 4px,transparent 5px);transform:translate3d(0,7px,0) scale(.92)}
+.hero .primary:hover:before{animation:buttonBubbles .9s var(--motion-ease) both}
+@keyframes buttonBubbles{0%{opacity:0;transform:translate3d(0,8px,0) scale(.9)}35%{opacity:1}100%{opacity:0;transform:translate3d(0,-15px,0) scale(1.08)}}
+.hero .primary:after{content:'';position:absolute;inset:-35% -28%;z-index:-1;pointer-events:none;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.62) 49%,transparent 60%);transform:translate3d(-115%,0,0);animation:heroCtaShine 3.8s ease-in-out 1.2s infinite}
+@keyframes heroCtaShine{0%,30%{transform:translate3d(-115%,0,0)}58%,100%{transform:translate3d(115%,0,0)}}
+@media(prefers-reduced-motion:reduce){.scroll-reveal{opacity:1;transform:none;transition:none}.hero.scroll-reveal.is-visible>div:first-child,.hero .primary:after,.hero .primary:hover:before{animation:none}}
+
+/* Premium page atmosphere, intentionally excluded from the customizer. */
+main:not(.customizer){position:relative;isolation:isolate;overflow:clip}
+main:not(.customizer)::before{content:'';position:absolute;z-index:-1;inset:0;pointer-events:none;background:radial-gradient(circle at 8% 8%,rgba(227,63,169,.055),transparent 24%),radial-gradient(circle at 92% 38%,rgba(168,202,19,.055),transparent 20%);animation:ambientDrift 16s ease-in-out infinite alternate}
+@keyframes ambientDrift{from{transform:translate3d(-1%,0,0) scale(1)}to{transform:translate3d(1%,1%,0) scale(1.025)}}
+
+/* Layered reveal for every non-customizer page. */
+main:not(.customizer) .scroll-reveal{transition-duration:.9s}
+main:not(.customizer) .scroll-reveal.is-visible{animation:revealSettle .9s var(--motion-ease) both!important}
+@keyframes revealSettle{from{opacity:0;transform:translate3d(0,22px,0) scale(.985)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+main:not(.customizer) .scroll-reveal.is-visible:nth-child(2){animation-delay:.08s!important}
+main:not(.customizer) .scroll-reveal.is-visible:nth-child(3){animation-delay:.16s!important}
+main:not(.customizer) .scroll-reveal.is-visible:nth-child(4){animation-delay:.24s!important}
+
+/* Editorial image treatment: depth appears on hover, while the image remains calm at rest. */
+main:not(.customizer) .product-image,.detail-visual,.guide-banner,.about-mark{position:relative;overflow:hidden}
+main:not(.customizer) .product-image::after,.detail-visual::after,.guide-banner::after,.about-mark::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.3) 48%,transparent 65%);transform:translate3d(-120%,0,0);transition:transform .9s var(--motion-ease)}
+main:not(.customizer) .product-card:hover .product-image::after,main:not(.customizer) .detail-visual:hover::after,main:not(.customizer) .guide-banner:hover::after,main:not(.customizer) .about-mark:hover::after{transform:translate3d(120%,0,0)}
+main:not(.customizer) .product-card:hover,.steps article:hover,.benefit-list article:hover,.feature:hover{box-shadow:0 22px 48px rgba(47,91,50,.15);transform:translate3d(0,-7px,0)}
+main:not(.customizer) .product-card,.steps article,.benefit-list article,.feature{transition:transform .5s var(--motion-ease),box-shadow .5s var(--motion-ease),background-color .5s ease}
+
+/* Non-button links receive a polished underline sweep. */
+main:not(.customizer) a:not(button){position:relative}
+main:not(.customizer) a:not(button)::after{content:'';position:absolute;left:0;right:100%;bottom:-3px;height:1px;background:var(--pink);transition:right .35s var(--motion-ease)}
+main:not(.customizer) a:not(button):hover::after{right:0}
+
+/* Exclude the builder from the new page choreography. */
+.customizer .scroll-reveal{opacity:1;transform:none;animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){main:not(.customizer)::before{animation:none}main:not(.customizer) .scroll-reveal.is-visible{animation:none!important}}
+
+/* Shared bubble interaction for every action button. */
+.bubble-button{position:relative;isolation:isolate;overflow:hidden;transition:transform .38s var(--motion-ease),box-shadow .38s var(--motion-ease),background-color .38s ease,border-color .38s ease}
+.bubble-button>*{position:relative;z-index:2}
+.bubble-button::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(circle at 14% 78%,rgba(255,255,255,.8) 0 3px,transparent 4px),radial-gradient(circle at 31% 91%,rgba(255,255,255,.58) 0 5px,transparent 6px),radial-gradient(circle at 59% 83%,rgba(255,255,255,.72) 0 3px,transparent 4px),radial-gradient(circle at 84% 94%,rgba(255,255,255,.64) 0 4px,transparent 5px);transform:translate3d(0,8px,0) scale(.92)}
+.bubble-button:hover{transform:translate3d(0,-3px,0);box-shadow:0 10px 22px rgba(47,91,50,.18)}
+.bubble-button:hover::before{animation:buttonBubbles .95s var(--motion-ease) both}
+.bubble-button:active{transform:translate3d(0,0,0) scale(.98)}
+.bubble-button:hover:not(.nav-cta){
+  background:linear-gradient(145deg,#ff9dcc 0%,#e33fa9 68%,#b92d82 100%);
+  border-color:#e33fa9;
+  color:#fff;
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.27),inset -6px -7px 0 rgba(126,24,87,.24),0 11px 23px rgba(185,45,130,.25);
+}
+.bubble-button:hover:not(.nav-cta)::before{inset:7px auto auto 13px;width:22px;height:12px;border-radius:50%;opacity:1;background:linear-gradient(145deg,rgba(255,255,255,.85),rgba(255,255,255,0));box-shadow:29px 11px 0 -4px rgba(255,255,255,.55),66px 1px 0 -7px rgba(255,255,255,.7);transform:translate3d(0,0,0) rotate(-22deg);animation:bubbleGloss .9s var(--motion-ease) both}
+@keyframes bubbleGloss{0%{opacity:0;transform:translate3d(-8px,8px,0) rotate(-22deg) scale(.7)}45%{opacity:1}100%{opacity:1;transform:translate3d(0,0,0) rotate(-22deg) scale(1)}}
+@media(prefers-reduced-motion:reduce){.bubble-button,.bubble-button::before{animation:none!important;transition:none!important}.bubble-button:hover{transform:none}}
+
+/* The fixed header CTA is bubble-styled even before hover. */
+.site-header .nav-cta{
+  background:radial-gradient(circle at 22% 18%,rgba(255,255,255,.7) 0 3px,transparent 4px),radial-gradient(circle at 79% 25%,rgba(255,255,255,.35) 0 2px,transparent 3px),linear-gradient(145deg,#ff9dcc 0%,#e33fa9 66%,#b92d82 100%);
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.28),inset -6px -7px 0 rgba(126,24,87,.25),0 5px 0 #b52d80,0 9px 18px rgba(185,45,130,.18);
+  color:#fff;
+}
+.site-header .nav-cta:hover{
+  background:radial-gradient(circle at 22% 18%,rgba(255,255,255,.85) 0 3px,transparent 4px),radial-gradient(circle at 79% 25%,rgba(255,255,255,.5) 0 2px,transparent 3px),linear-gradient(145deg,#ffb3d9 0%,#e33fa9 66%,#a92774 100%);
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.34),inset -6px -7px 0 rgba(126,24,87,.28),0 7px 0 #a92774,0 14px 25px rgba(185,45,130,.3);
+}
+
+/* Active header items keep the bubble finish, but invert to the cream-white state. */
+.site-header nav button.active{
+  background:radial-gradient(circle at 22% 18%,rgba(255,255,255,.95) 0 3px,transparent 4px),radial-gradient(circle at 78% 25%,rgba(227,63,169,.16) 0 2px,transparent 3px),linear-gradient(145deg,#fff 0%,#fffdf8 68%,#f0e8dc 100%);
+  color:var(--green);
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.9),inset -5px -6px 0 rgba(214,202,184,.55),0 5px 12px rgba(18,49,27,.16);
+  transform:translate3d(0,-1px,0);
+}
+.site-header nav button.active:hover{background:radial-gradient(circle at 22% 18%,#fff 0 3px,transparent 4px),linear-gradient(145deg,#fff 0%,#fffdf8 68%,#f0e8dc 100%);color:var(--green);box-shadow:inset 3px 3px 0 rgba(255,255,255,.9),inset -5px -6px 0 rgba(214,202,184,.55),0 7px 16px rgba(18,49,27,.2)}
+
+/* Product artwork zooms gently inside its clipped frame. */
+.product-image img{transform-origin:center;transition:transform 1.15s cubic-bezier(.16,1,.3,1),filter 1.15s ease;will-change:transform}
+.product-card:hover .product-image img{transform:translate3d(0,0,0) scale(1.46);filter:saturate(1.08) contrast(1.03)}
+.product-card:hover{transform:none!important;box-shadow:0 8px 25px #2f5b3210!important}
+main:not(.customizer) .product-card:hover .product-image::after{transform:translate3d(-120%,0,0)}
+.page-intro .primary{background:radial-gradient(circle at 20% 18%,rgba(255,255,255,.6) 0 3px,transparent 4px),linear-gradient(145deg,#587d5b 0%,#2f5b32 68%,#234827 100%);box-shadow:inset 3px 3px 0 rgba(255,255,255,.2),inset -6px -7px 0 rgba(24,56,30,.28),0 6px 0 #234827,0 10px 20px rgba(47,91,50,.18)}
+.page-intro .primary:hover{background:radial-gradient(circle at 20% 18%,rgba(255,255,255,.82) 0 3px,transparent 4px),linear-gradient(145deg,#6e9671 0%,#3d7042 68%,#2b5631 100%);box-shadow:inset 3px 3px 0 rgba(255,255,255,.3),inset -6px -7px 0 rgba(24,56,30,.25),0 7px 0 #234827,0 13px 25px rgba(47,91,50,.28);transform:translate3d(0,-3px,0)}
+
+/* Keep the header brand mark static and clean. */
+.site-header .brand,.site-header .brand:hover,.site-header .brand:active{background:transparent!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important;color:var(--green)!important;animation:none!important;transform:none!important;filter:none!important;transition:none!important}
+.site-header .brand::before,.site-header .brand::after{display:none!important;content:none!important}
+.site-header .brand img,.site-header .brand small{animation:none!important;transform:none!important;filter:none!important;transition:none!important}
+
+/* Softer home CTA motion: the hover state eases in instead of snapping. */
+.hero .primary{transition:transform .8s cubic-bezier(.16,1,.3,1),box-shadow .8s cubic-bezier(.16,1,.3,1),filter .8s ease,background-color .8s ease;will-change:transform,box-shadow,filter}
+.hero .primary:hover{transform:translate3d(6px,-2px,0) scale(1.015);filter:saturate(1.04) brightness(1.025);box-shadow:inset 3px 3px 0 rgba(255,255,255,.3),inset -6px -7px 0 rgba(126,24,87,.22),0 6px 0 #a92774,0 10px 22px rgba(185,45,130,.22)}
+.hero .primary:hover:before{animation-duration:1.2s}
+
+/* The opening-hours icon rings like a small bell on hover. */
+.opening-hours-icon svg{transform-origin:50% 12%;will-change:transform}
+.opening-hours:hover .opening-hours-icon svg{animation:hoursBellRing .72s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes hoursBellRing{0%,100%{transform:rotate(0)}12%{transform:rotate(12deg)}24%{transform:rotate(-10deg)}36%{transform:rotate(8deg)}48%{transform:rotate(-6deg)}60%{transform:rotate(3deg)}72%{transform:rotate(-1deg)}}
+.opening-hours h2,.opening-hours>div>p:not(.eyebrow){will-change:transform}
+.opening-hours:hover h2,.opening-hours:hover>div>p:not(.eyebrow){animation:hoursTextRing .72s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes hoursTextRing{0%,100%{transform:translate3d(0,0,0)}18%{transform:translate3d(1px,0,0)}36%{transform:translate3d(-1px,0,0)}54%{transform:translate3d(.7px,0,0)}72%{transform:translate3d(-.4px,0,0)}}
+
+/* Arrangement cards keep their supporting copy readable on the pink bubble state. */
+.arrangement-grid .bubble-button:hover b,.arrangement-grid .bubble-button:hover small{color:#fff!important}
+
+/* Cord choices inherit the actual cord color in their bubble state. */
+.color-choice.bubble-button:hover,.color-choice.bubble-button.chosen{background:var(--choice-color)!important;color:var(--choice-ink)!important;border-color:var(--choice-color)!important;box-shadow:inset 3px 3px 0 rgba(255,255,255,.48),inset -6px -7px 0 rgba(0,0,0,.16),0 10px 21px color-mix(in srgb,var(--choice-color),transparent 58%)!important}
+.color-choice.bubble-button:hover b,.color-choice.bubble-button.chosen b,.color-choice.bubble-button:hover svg,.color-choice.bubble-button.chosen svg{color:var(--choice-ink)!important}
+.color-choice:hover,.color-choice.chosen{background:radial-gradient(circle at 22% 18%,rgba(255,255,255,.72) 0 4px,transparent 5px),linear-gradient(145deg,color-mix(in srgb,var(--choice-color),white 24%),var(--choice-color) 66%,color-mix(in srgb,var(--choice-color),black 14%))!important;color:var(--choice-ink)!important;border-color:var(--choice-color)!important;box-shadow:inset 3px 3px 0 rgba(255,255,255,.45),inset -6px -7px 0 rgba(0,0,0,.15),0 10px 21px color-mix(in srgb,var(--choice-color),transparent 58%)!important}
+.color-choice:hover b,.color-choice.chosen b,.color-choice:hover svg,.color-choice.chosen svg{color:var(--choice-ink)!important}
+
+/* The selected arrangement remains visibly selected after the pointer leaves. */
+.arrangement-grid .bubble-button.chosen{background:linear-gradient(145deg,#ff9dcc 0%,#e33fa9 68%,#b92d82 100%)!important;color:#fff!important;border-color:#e33fa9!important;box-shadow:inset 3px 3px 0 rgba(255,255,255,.27),inset -6px -7px 0 rgba(126,24,87,.24),0 11px 23px rgba(185,45,130,.25)!important}
+.arrangement-grid .bubble-button.chosen b,.arrangement-grid .bubble-button.chosen small{color:#fff!important}
+.arrangement-grid .bubble-button.chosen::before{inset:7px auto auto 13px;width:22px;height:12px;border-radius:50%;opacity:1;background:linear-gradient(145deg,rgba(255,255,255,.85),rgba(255,255,255,0));box-shadow:29px 11px 0 -4px rgba(255,255,255,.55),66px 1px 0 -7px rgba(255,255,255,.7);transform:rotate(-22deg)}
+
+/* Letter-style samples stay image-led; the global bubble treatment is intentionally off here. */
+.letter-style-grid .bubble-button,.letter-style-grid .bubble-button:hover,.letter-style-grid .bubble-button:active{background:#fff!important;color:var(--green)!important;border-color:#e5dfd1!important;box-shadow:none!important;transform:none!important}
+.letter-style-grid .bubble-button.chosen{border-color:var(--pink)!important}
+.letter-style-grid .bubble-button::before,.letter-style-grid .bubble-button::after{display:none!important}
+
+/* Home CTA: glossy green bubble by default, glossy pink on hover. */
+.hero .primary{background:radial-gradient(circle at 20% 18%,rgba(255,255,255,.6) 0 3px,transparent 4px),linear-gradient(145deg,#587d5b 0%,#2f5b32 68%,#234827 100%);box-shadow:inset 3px 3px 0 rgba(255,255,255,.2),inset -6px -7px 0 rgba(24,56,30,.28),0 6px 0 #234827,0 10px 20px rgba(47,91,50,.18)}
+.hero .primary:hover{background:radial-gradient(circle at 20% 18%,rgba(255,255,255,.82) 0 3px,transparent 4px),linear-gradient(145deg,#ff9dcc 0%,#e33fa9 68%,#b92d82 100%);box-shadow:inset 3px 3px 0 rgba(255,255,255,.3),inset -6px -7px 0 rgba(126,24,87,.25),0 7px 0 #a92774,0 13px 25px rgba(185,45,130,.28)}

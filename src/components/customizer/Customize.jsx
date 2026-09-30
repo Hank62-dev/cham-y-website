@@ -71,7 +71,7 @@ function Customize() {
         <div className="preview-wrap"><Preview selected={selected} letters={letters} pack="combo" previewRef={previewRef} charmOptions={specialCharms} cordColor={cordColor.value} arrangement={arrangement} letterStyle={letterStyle} /><div className="preview-actions"><button className="secondary" type="button" onClick={() => save('png')}><Download size={15} /> Lưu PNG</button><button className="secondary" type="button" onClick={() => save('jpg')}><Download size={15} /> Lưu JPG</button></div></div>
         <div className="custom-options">
           <OptionTitle no="01" title="Chọn màu dây" note="Dây phụ phối theo màu bạn chọn" />
-          <div className="color-choice-grid">{cordColors.map((color) => <button key={color.id} type="button" className={`color-choice ${cordColor.id === color.id ? 'chosen' : ''}`} onClick={() => setCordColor(color)}><span style={{ background: color.value }} /><b>{color.name}</b>{cordColor.id === color.id && <Check size={13} />}</button>)}</div>
+          <div className="color-choice-grid">{cordColors.map((color) => <button key={color.id} type="button" className={`color-choice ${cordColor.id === color.id ? 'chosen' : ''}`} style={{ '--choice-color': color.value, '--choice-ink': color.id === 'white' ? '#2f5b32' : '#fff' }} onClick={() => setCordColor(color)}><span style={{ background: color.value }} /><b>{color.name}</b>{cordColor.id === color.id && <Check size={13} />}</button>)}</div>
           <p className="custom-note-box">Đã gồm các charm nhỏ phối thêm và dây phụ phù hợp với màu dây.</p>
 
           <OptionTitle no="02" title="Sắp xếp charm" note="Chọn cách hiển thị trên mô phỏng" />
