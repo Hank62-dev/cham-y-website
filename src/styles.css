@@ -466,6 +466,21 @@ main:not(.customizer) .product-card:hover .product-image::after{transform:transl
 .arrangement-grid .bubble-button.chosen{background:linear-gradient(145deg,#ff9dcc 0%,#e33fa9 68%,#b92d82 100%)!important;color:#fff!important;border-color:#e33fa9!important;box-shadow:inset 3px 3px 0 rgba(255,255,255,.27),inset -6px -7px 0 rgba(126,24,87,.24),0 11px 23px rgba(185,45,130,.25)!important}
 .arrangement-grid .bubble-button.chosen b,.arrangement-grid .bubble-button.chosen small{color:#fff!important}
 .arrangement-grid .bubble-button.chosen::before{inset:7px auto auto 13px;width:22px;height:12px;border-radius:50%;opacity:1;background:linear-gradient(145deg,rgba(255,255,255,.85),rgba(255,255,255,0));box-shadow:29px 11px 0 -4px rgba(255,255,255,.55),66px 1px 0 -7px rgba(255,255,255,.7);transform:rotate(-22deg)}
+.arrangement-grid button:hover{background:linear-gradient(145deg,#ff9dcc 0%,#e33fa9 68%,#b92d82 100%)!important;color:#fff!important;border-color:#e33fa9!important;box-shadow:inset 3px 3px 0 rgba(255,255,255,.27),inset -6px -7px 0 rgba(126,24,87,.24),0 11px 23px rgba(185,45,130,.25)!important;transform:translate3d(0,-3px,0)}
+.arrangement-grid button:hover b,.arrangement-grid button:hover small{color:#fff!important}
+.arrangement-grid button.chosen{background:linear-gradient(145deg,#ff9dcc 0%,#e33fa9 68%,#b92d82 100%)!important;color:#fff!important;border-color:#e33fa9!important;box-shadow:inset 3px 3px 0 rgba(255,255,255,.27),inset -6px -7px 0 rgba(126,24,87,.24),0 11px 23px rgba(185,45,130,.25)!important}
+.arrangement-grid button.chosen b,.arrangement-grid button.chosen small{color:#fff!important}
+.special-charm-grid .charm-option:hover b,.special-charm-grid .charm-option:hover small,.special-charm-grid .charm-option.chosen b,.special-charm-grid .charm-option.chosen small{color:#fff!important}
+.special-charm-grid .charm-option.chosen:not(:hover) b,.special-charm-grid .charm-option.chosen:not(:hover) small{color:var(--green)!important}
+.special-charm-grid .charm-option.chosen{background:linear-gradient(145deg,#ff9dcc 0%,#e33fa9 68%,#b92d82 100%)!important;color:#fff!important;border-color:#e33fa9!important;box-shadow:inset 3px 3px 0 rgba(255,255,255,.27),inset -6px -7px 0 rgba(126,24,87,.24),0 11px 23px rgba(185,45,130,.25)!important}
+.special-charm-grid .charm-option.chosen b,.special-charm-grid .charm-option.chosen small{color:#fff!important}
+.special-charm-grid .charm-option.chosen:hover{transform:translate3d(0,-3px,0)}
+.special-charm-grid .charm-option:hover{background:linear-gradient(145deg,#ff9dcc 0%,#e33fa9 68%,#b92d82 100%)!important;color:#fff!important;border-color:#e33fa9!important;transform:translate3d(0,-3px,0);box-shadow:inset 3px 3px 0 rgba(255,255,255,.27),inset -6px -7px 0 rgba(126,24,87,.24),0 11px 23px rgba(185,45,130,.25)!important}
+.special-charm-grid .charm-option:hover b,.special-charm-grid .charm-option:hover small{color:#fff!important}
+.social-actions a{border:0!important;color:#fff!important;box-shadow:inset 3px 3px 0 rgba(255,255,255,.28),inset -5px -6px 0 rgba(0,0,0,.18),0 5px 0 rgba(0,0,0,.16),0 9px 18px rgba(47,91,50,.14);transition:transform .45s var(--motion-ease),box-shadow .45s var(--motion-ease),filter .45s ease!important}
+.social-actions a:first-child{background:radial-gradient(circle at 20% 18%,rgba(255,255,255,.72) 0 3px,transparent 4px),linear-gradient(145deg,#ff9dcc 0%,#e33fa9 68%,#b92d82 100%)!important}
+.social-actions a:last-child{background:radial-gradient(circle at 20% 18%,rgba(255,255,255,.62) 0 3px,transparent 4px),linear-gradient(145deg,#587d5b 0%,#2f5b32 68%,#234827 100%)!important}
+.social-actions a:hover{transform:translate3d(0,-3px,0) scale(1.02);filter:brightness(1.06);box-shadow:inset 3px 3px 0 rgba(255,255,255,.34),inset -5px -6px 0 rgba(0,0,0,.2),0 6px 0 rgba(0,0,0,.18),0 13px 24px rgba(47,91,50,.2)!important}
 
 /* Letter-style samples stay image-led; the global bubble treatment is intentionally off here. */
 .letter-style-grid .bubble-button,.letter-style-grid .bubble-button:hover,.letter-style-grid .bubble-button:active{background:#fff!important;color:var(--green)!important;border-color:#e5dfd1!important;box-shadow:none!important;transform:none!important}
