@@ -1,11 +1,75 @@
-export const charmPrice = 9000;
-export const namePrices = { 2: 49000, 3: 58000, 4: 67000, 5: 76000, 6: 85000 };
-export const charms = ['Hoa', 'Tim', 'Caro', 'Trăng', 'Mây', 'Gấu', 'Ngôi sao', 'Nơ nhỏ'].map((name, i) => ({ id: `charm-${i}`, name, icon: ['✿', '♥', '▦', '☾', '☁', '♣', '★', '🎀'][i], image: `/CacLoaiCharm/${[13, 14, 8, 12, 11, 10, 12, 7][i]}.png`, tone: i % 2 ? 'pink' : 'lime' }));
-export const products = [
-  ['Pastel Garden', 79000, 'Màu pastel dịu dàng, nhiều charm hoa và chi tiết đáng yêu.', '#8ebbd0', '1790016790488_1948115482574023851_g2059885459125728308_1d5b980704fafd72212cba03150e239f.jpg'],
-  ['Spider Parker', 85000, 'Cá tính với dây xanh, chữ nổi và những điểm nhấn mạnh mẽ.', '#e33fa9', '1790016790508_1948115482574023851_g2059885459125728308_7b724e5a5d3f1e6f022b66163cea3826.jpg'],
-  ['Sunny Name', 82000, 'Tươi sáng với bảng màu vàng xanh và tên riêng nổi bật.', '#a8ca13', '1790016790520_1948115482574023851_g2059885459125728308_b2efbfcbe04b2da77b806e4938004ef1.jpg'],
-  ['Blue Bloom', 79000, 'Nhẹ nhàng, trong trẻo với chữ màu pastel và dây phối xanh.', '#d7c6a6', '1790016790532_1948115482574023851_g2059885459125728308_6ca9e1235113aa37ee16070b36ee7c0c.jpg'],
-  ['Sweet Heart', 85000, 'Hồng ngọt ngào, mềm mại và có một chút lấp lánh.', '#e9a1bf', '1790016790543_1948115482574023851_g2059885459125728308_f5bc7f18cbbd9ffda8776b41b922b9c1.jpg']
-].map(([name, price, description, accent, image]) => ({ name, price, description, accent, image }));
+export const charmPrice = 9_000;
 
+// Bảng giá tên theo số ký tự trong note sản phẩm.
+export const namePrices = {
+  2: 49_000,
+  3: 58_000,
+  4: 67_000,
+  5: 76_000,
+};
+
+export const specialPriceTable = {
+  2: { 1: 95_000, 2: 97_000, 3: 98_000 },
+  3: { 1: 96_000, 2: 98_000, 3: 100_000 },
+  4: { 1: 98_000, 2: 99_000, 3: 101_000 },
+  5: { 1: 99_000, 2: 101_000, 3: 102_000 },
+};
+
+export const getSpecialPrice = (charmCount, letters) => specialPriceTable[letters.length]?.[charmCount] ?? 0;
+
+const charmNames = ['Hoa', 'Tim', 'Caro', 'Trăng', 'Mây', 'Gấu', 'Ngôi sao', 'Nơ nhỏ'];
+const charmIcons = ['✿', '♥', '▦', '☾', '☁', '♣', '★', '🎀'];
+const charmImages = [13, 14, 8, 12, 11, 10, 12, 7];
+
+// Cập nhật số lượng tồn tại đây. Dùng null khi chưa quản lý tồn kho cho mẫu đó.
+const charmStocks = [null, null, null, null, null, null, null, null];
+
+export const charms = charmNames.map((name, index) => ({
+  id: `charm-${index}`,
+  name,
+  icon: charmIcons[index],
+  image: `/CacLoaiCharm/${charmImages[index]}.png`,
+  tone: index % 2 ? 'pink' : 'lime',
+  stock: charmStocks[index],
+}));
+
+export const isOutOfStock = (item) => item?.stock !== null && item?.stock <= 0;
+
+export const specialCharms = [
+  { id: 'special-flower', name: 'Hoa cánh lớn', image: '/CacLoaiCharm/13.png', tone: 'pink', price: 9_000, stock: null },
+  { id: 'special-flower-mix', name: 'Hoa Hoè', image: '/ẢNH CHARM SPECIAL/Hoa Hoè.png', tone: 'lime', price: 9_000, stock: null },
+  { id: 'special-bling', name: 'Bling Bling', image: '/ẢNH CHARM SPECIAL/Bling Bling.png', tone: 'pink', price: 9_000, stock: null },
+];
+
+export const products = [
+  {
+    id: 'japanese-wish',
+    name: 'Japanese Wish',
+    description: 'Mẫu dây charm mang cảm giác nhẹ nhàng, trong trẻo và đáng yêu.',
+    image: '/SẢN PHẨM/Japanese Wish.png',
+    accent: '#e8c7cf',
+    charmCount: 3,
+  },
+  {
+    id: 'sunny-dream',
+    name: 'Sunny Dream',
+    description: 'Mẫu phối tươi sáng với những chi tiết nhỏ đầy năng lượng.',
+    image: '/SẢN PHẨM/Sunny Dream.png',
+    accent: '#d9c26f',
+    charmCount: 2,
+  },
+  {
+    id: 'sweet-love',
+    name: 'Sweet Love',
+    description: 'Mẫu phối ngọt ngào, mềm mại và có một chút lấp lánh.',
+    image: '/SẢN PHẨM/Sweet Love.png',
+    accent: '#ed9fc0',
+    charmCount: 3,
+  },
+];
+
+export function getReadyMadePrice(product, letters) {
+  return getSpecialPrice(product.charmCount, letters);
+}
+
+export const getProduct = (id) => products.find((product) => product.id === id) ?? products[0];

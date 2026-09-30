@@ -1,9 +1,50 @@
 import { useState } from 'react';
-import { asset } from '../lib/assets';
-import { money } from '../lib/formatters';
-import { products } from '../data/siteData';
-import Payment from '../components/common/Payment';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import Payment from '../components/common/Payment';
+import { getProduct, getReadyMadePrice } from '../data/siteData';
+import { money } from '../lib/formatters';
 
-function ProductDetail({ go }) { const p = products[0]; const [pay, setPay] = useState(false); return <main className="page product-detail"><button className="back-link" onClick={() => go('shop')}><ArrowLeft size={15} /> Quay lại cửa hàng</button><div className="detail-layout"><div className="detail-visual"><img src={`/MauCoSan/${p.image}`} alt={p.name} /><span>Chạm Ý</span></div><div className="detail-copy"><p className="eyebrow">CONCEPT CÓ SẴN</p><h1>{p.name}</h1><strong className="detail-price">{money(p.price)}</strong><p>{p.description} Concept được phối sẵn để bạn có ngay một món phụ kiện nhẹ nhàng nhưng vẫn có điểm nhấn riêng.</p><h3>Sản phẩm gồm:</h3><ul><li>1 dây móc khóa</li><li>1 chữ / tên</li><li>3–4 charm theo concept</li></ul><div className="detail-actions"><button className="primary" onClick={() => setPay(true)}>Thanh toán {money(p.price)} <ArrowRight size={17} /></button><button className="secondary" onClick={() => go('customize')}>Tự phối lại</button></div></div></div>{pay && <Payment product={p} total={p.price} close={() => setPay(false)} />}</main>; }
+function ProductDetail({ go, productId }) {
+  const product = getProduct(productId);
+  const [letters, setLetters] = useState('');
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const price = letters.length >= 2 && letters.length <= 5 ? getReadyMadePrice(product, letters) : 0;
+
+  const updateLetters = (event) => {
+    setLetters(event.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase());
+  };
+
+  return (
+    <main className="page product-detail">
+      <button className="back-link" type="button" onClick={() => go('shop')}><ArrowLeft size={15} /> Quay lại cửa hàng</button>
+      <div className="detail-layout">
+        <div className="detail-visual" style={{ '--accent': product.accent }}>
+          <img src={product.image} alt={product.name} />
+          <span>Chạm Ý</span>
+        </div>
+        <div className="detail-copy">
+          <p className="eyebrow">CONCEPT CÓ SẴN</p>
+          <h1>{product.name}</h1>
+          <p>{product.description}</p>
+          <h3>Sản phẩm gồm:</h3>
+          <ul>
+            <li>1 dây móc khóa</li>
+            <li>{product.charmCount} charm theo concept</li>
+            <li>1 tên riêng theo lựa chọn của bạn</li>
+          </ul>
+          <label className="detail-name-label" htmlFor="ready-made-name">Chọn tên của bạn</label>
+          <input id="ready-made-name" className="name-input" maxLength="5" value={letters} onChange={updateLetters} placeholder="NHẬP 2–5 CHỮ CÁI TIẾNG ANH" />
+          {letters.length >= 2 && <p className="name-price-hint">{letters.length} chữ · {money(price)}</p>}
+          <div className="detail-total"><span>Giá sản phẩm</span><strong>{price ? money(price) : 'Chọn tên để xem giá'}</strong></div>
+          <div className="detail-actions">
+            <button className="primary" type="button" disabled={!price} onClick={() => setIsPaymentOpen(true)}>Mua hàng <ArrowRight size={17} /></button>
+            <button className="secondary" type="button" onClick={() => go('customize')}>Tự phối lại</button>
+          </div>
+        </div>
+      </div>
+      {isPaymentOpen && <Payment product={product} readyMade letters={letters} total={price} close={() => setIsPaymentOpen(false)} />}
+    </main>
+  );
+}
+
 export default ProductDetail;

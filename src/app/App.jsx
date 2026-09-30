@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import Home from '../pages/Home';
@@ -7,8 +7,54 @@ import ProductDetail from '../pages/ProductDetail';
 import Guide from '../pages/Guide';
 import About from '../pages/About';
 import Customize from '../components/customizer/Customize';
+import { createPath, getProductId, getRoute } from '../lib/router';
 
-function App() { const routeMap = { '/': 'home', '/shop': 'shop', '/detail': 'detail', '/guide': 'guide', '/about': 'about', '/customize': 'customize' }; const pathMap = Object.fromEntries(Object.entries(routeMap).map(([path, page]) => [page, path])); const [page, setPage] = useState(routeMap[window.location.pathname] || 'home'); useEffect(() => { const onPopState = () => setPage(routeMap[window.location.pathname] || 'home'); window.addEventListener('popstate', onPopState); return () => window.removeEventListener('popstate', onPopState); }, []); const go = (next) => { const path = pathMap[next] || '/'; window.history.pushState({ page: next }, '', path); setPage(next); window.scrollTo({ top: 0, behavior: 'smooth' }); }; return <><Header page={page} go={go} />{page === 'home' ? <Home go={go} /> : page === 'shop' ? <Shop go={go} /> : page === 'detail' ? <ProductDetail go={go} /> : page === 'guide' ? <Guide /> : page === 'about' ? <About /> : <Customize />}<Footer /></>; }
+function App() {
+  const [location, setLocation] = useState(() => ({
+    page: getRoute(),
+    productId: getProductId(),
+  }));
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setLocation({ page: getRoute(), productId: getProductId() });
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const go = useCallback((page, params = {}) => {
+    window.history.pushState({}, '', createPath(page, params));
+    setLocation({ page, productId: params.product ?? null });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const renderPage = () => {
+    switch (location.page) {
+      case 'shop':
+        return <Shop go={go} />;
+      case 'detail':
+        return <ProductDetail go={go} productId={location.productId} />;
+      case 'guide':
+        return <Guide />;
+      case 'about':
+        return <About />;
+      case 'customize':
+        return <Customize />;
+      case 'home':
+      default:
+        return <Home go={go} />;
+    }
+  };
+
+  return (
+    <>
+      <Header page={location.page} go={go} />
+      {renderPage()}
+      <Footer />
+    </>
+  );
+}
 
 export default App;
-
