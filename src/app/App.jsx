@@ -72,9 +72,9 @@ function App() {
       case 'detail':
         return <ProductDetail go={go} productId={location.productId} />;
       case 'guide':
-        return <Guide />;
+        return <Guide go={go} />;
       case 'about':
-        return <About />;
+        return <About go={go} />;
       case 'customize':
         return <Customize />;
       case 'home':
