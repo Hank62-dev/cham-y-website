@@ -13,7 +13,7 @@ export const login = (password) => request('/admin/login', { method: 'POST', bod
 export const getDashboard = (token) => request('/admin/dashboard', { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json());
 export const getOrders = (token, query) => request(`/admin/orders?${new URLSearchParams(query)}`, { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json());
 export const getOrder = (token, id) => request(`/admin/orders/${id}`, { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json());
-export const updateStatus = (token, id, status) => request(`/admin/orders/${id}/status`, { method: 'PATCH', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify({ status }) }).then((r) => r.json());
+export const updateStatus = (token, id, status, rejectionReason = '') => request(`/admin/orders/${id}/status`, { method: 'PATCH', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify({ status, rejectionReason }) }).then((r) => r.json());
 export async function exportOrders(token, status) {
   const response = await fetch(`${API_URL}/admin/orders/export${status ? `?status=${status}` : ''}`, { headers: { Authorization: `Bearer ${token}` } });
   if (!response.ok) throw new Error('Export failed');

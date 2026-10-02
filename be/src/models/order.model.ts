@@ -28,7 +28,8 @@ const orderSchema = new Schema({
   paymentProofImage: { type: imageSchema, default: null },
   subtotal: { type: Number, min: 0, required: true },
   totalAmount: { type: Number, min: 0, required: true },
-  status: { type: String, enum: ['PENDING', 'COMPLETED'], default: 'PENDING', index: true },
+  status: { type: String, enum: ['PENDING', 'COMPLETED', 'REJECTED'], default: 'PENDING', index: true },
+  rejectionReason: { type: String, default: null, trim: true },
   completedAt: { type: Date, default: null },
 }, { timestamps: true });
 
