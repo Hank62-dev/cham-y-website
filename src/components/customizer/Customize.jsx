@@ -28,6 +28,7 @@ function Customize() {
   const [letterStyle, setLetterStyle] = useState('bubble');
   const [letters, setLetters] = useState('');
   const [pay, setPay] = useState(false);
+  const [showSavedDetails, setShowSavedDetails] = useState(false);
   const [validationError, setValidationError] = useState('');
   const previewRef = useRef(null);
 
@@ -61,19 +62,25 @@ function Customize() {
 
   const save = async (format) => {
     if (!previewRef.current) return;
-    const options = { pixelRatio: 2, backgroundColor: '#f1ebdc', cacheBust: true };
-    const dataUrl = format === 'jpg' ? await toJpeg(previewRef.current, { ...options, quality: 0.92 }) : await toPng(previewRef.current, options);
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = `cham-y-preview.${format}`;
-    link.click();
+    setShowSavedDetails(true);
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    try {
+      const options = { pixelRatio: 2, backgroundColor: '#f1ebdc', cacheBust: true };
+      const dataUrl = format === 'jpg' ? await toJpeg(previewRef.current, { ...options, quality: 0.92 }) : await toPng(previewRef.current, options);
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `cham-y-preview.${format}`;
+      link.click();
+    } finally {
+      setShowSavedDetails(false);
+    }
   };
 
   return (
     <main className="customizer">
       <div className="custom-head"><div><p className="eyebrow">TỰ PHỐI SẢN PHẨM</p><h1>Tạo sản phẩm<br /><em>của riêng bạn.</em></h1></div><p className="custom-note">Chọn màu dây → phối charm →<br />chọn chữ và tên của bạn.</p></div>
       <div className="custom-layout">
-        <div className="preview-wrap"><Preview selected={selected} letters={letters} pack="combo" previewRef={previewRef} charmOptions={specialCharms} cordColor={cordColor.value} arrangement={arrangement} letterStyle={letterStyle} /><div className="preview-actions"><button className="secondary" type="button" onClick={() => save('png')}><Download size={15} /> Lưu PNG</button><button className="secondary" type="button" onClick={() => save('jpg')}><Download size={15} /> Lưu JPG</button></div></div>
+        <div className="preview-wrap"><Preview selected={selected} letters={letters} pack="combo" previewRef={previewRef} charmOptions={specialCharms} cordColor={cordColor.value} cordColorName={cordColor.name} showDetails={showSavedDetails} arrangement={arrangement} letterStyle={letterStyle} /><div className="preview-actions"><button className="secondary" type="button" onClick={() => save('png')}><Download size={15} /> Lưu PNG</button><button className="secondary" type="button" onClick={() => save('jpg')}><Download size={15} /> Lưu JPG</button></div></div>
         <div className="custom-options">
           <OptionTitle no="01" title="Chọn màu dây" note="Dây phụ phối theo màu bạn chọn" />
           <div className="color-choice-grid">{cordColors.map((color) => <button key={color.id} type="button" className={`color-choice ${cordColor.id === color.id ? 'chosen' : ''}`} style={{ '--choice-color': color.value, '--choice-ink': color.ink }} onClick={() => setCordColor(color)}><span style={{ background: color.value }} /><b>{color.name}</b>{cordColor.id === color.id && <Check size={13} />}</button>)}</div>
