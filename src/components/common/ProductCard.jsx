@@ -1,4 +1,5 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ShoppingBag } from 'lucide-react';
+import { addToCart } from '../../lib/cart';
 
 function ProductCard({ product, go }) {
   const openDetail = () => go?.('detail', { product: product.id });
@@ -17,6 +18,9 @@ function ProductCard({ product, go }) {
       </div>
       <button className="card-link" type="button" onClick={openDetail}>
         Mua hàng <ArrowRight size={13} />
+      </button>
+      <button className="card-cart-button" type="button" onClick={(event) => { event.stopPropagation(); addToCart(product); }}>
+        <ShoppingBag size={13} /> Thêm giỏ
       </button>
     </article>
   );

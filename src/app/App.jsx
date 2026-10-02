@@ -6,6 +6,9 @@ import Shop from '../pages/Shop';
 import ProductDetail from '../pages/ProductDetail';
 import Guide from '../pages/Guide';
 import About from '../pages/About';
+import Orders from '../pages/Orders';
+import CartDrawer from '../components/common/CartDrawer';
+import { readCart } from '../lib/cart';
 import Customize from '../components/customizer/Customize';
 import { createPath, getProductId, getRoute } from '../lib/router';
 
@@ -14,6 +17,14 @@ function App() {
     page: getRoute(),
     productId: getProductId(),
   }));
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(() => readCart().reduce((sum, item) => sum + item.quantity, 0));
+
+  useEffect(() => {
+    const updateCart = () => setCartCount(readCart().reduce((sum, item) => sum + item.quantity, 0));
+    window.addEventListener('cart-updated', updateCart);
+    return () => window.removeEventListener('cart-updated', updateCart);
+  }, []);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -75,6 +86,8 @@ function App() {
         return <Guide go={go} />;
       case 'about':
         return <About go={go} />;
+      case 'orders':
+        return <Orders />;
       case 'customize':
         return <Customize />;
       case 'home':
@@ -85,9 +98,10 @@ function App() {
 
   return (
     <>
-      <Header page={location.page} go={go} />
+      <Header page={location.page} go={go} cartCount={cartCount} openCart={() => setCartOpen(true)} />
       {renderPage()}
       <Footer />
+      {cartOpen && <CartDrawer close={() => setCartOpen(false)} />}
     </>
   );
 }

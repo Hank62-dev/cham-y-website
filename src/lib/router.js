@@ -5,6 +5,7 @@ export const ROUTES = {
   guide: '/guide',
   about: '/about',
   customize: '/customize',
+  orders: '/orders',
 };
 
 export function getRoute(pathname = window.location.pathname) {

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { ArrowUpRight, Menu, ShoppingBag, X } from 'lucide-react';
 import { asset } from '../../lib/assets';
 
-function Header({ page, go }) {
+function Header({ page, go, cartCount = 0, openCart }) {
   const [open, setOpen] = useState(false);
   const navigate = (next) => {
     setOpen(false);
@@ -14,6 +14,7 @@ function Header({ page, go }) {
     ['shop', 'Cửa hàng'],
     ['guide', 'Hướng dẫn'],
     ['about', 'Về Chạm Ý'],
+    ['orders', 'Đơn hàng của tôi'],
   ];
 
   return (
@@ -48,6 +49,7 @@ function Header({ page, go }) {
         <button className="nav-cta" type="button" onClick={() => navigate('customize')}>
           Tự phối ngay <span>↗</span>
         </button>
+        <button className="cart-button" type="button" onClick={openCart} aria-label="Mở giỏ hàng"><ShoppingBag size={17} /><span>{cartCount}</span></button>
       </header>
       {open && <button className="mobile-menu-backdrop" type="button" onClick={() => setOpen(false)} aria-label="Đóng menu" />}
     </>

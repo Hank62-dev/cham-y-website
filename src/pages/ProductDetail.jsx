@@ -16,6 +16,7 @@ function ProductDetail({ go, productId }) {
     setLetters(event.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase());
   };
 
+
   const savePreview = async (format) => {
     if (!detailPreviewRef.current || letters.length < 2) return;
     const options = { pixelRatio: 2, backgroundColor: '#f2ecdd', cacheBust: true };
@@ -60,7 +61,7 @@ function ProductDetail({ go, productId }) {
           </div>
         </div>
       </div>
-      {isPaymentOpen && <Payment product={product} readyMade letters={letters} total={price} close={() => setIsPaymentOpen(false)} />}
+      {isPaymentOpen && <Payment product={product} readyMade letters={letters} total={price} previewRef={detailPreviewRef} close={() => setIsPaymentOpen(false)} />}
     </main>
   );
 }

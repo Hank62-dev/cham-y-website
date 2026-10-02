@@ -97,7 +97,7 @@ function Customize() {
           {validationError && <p className="form-error" role="alert">{validationError}</p>}
         </div>
       </div>
-      {pay && <Payment total={total} customOrder cordPrice={23_000} specialSelected={selected.filter(Boolean)} specialCharms={specialCharms} letters={letters} close={() => setPay(false)} />}
+      {pay && <Payment total={total} customOrder specialSelected={selected.filter(Boolean)} specialCharms={specialCharms} letters={letters} previewRef={previewRef} customizationData={{ cordColor: cordColor.value, arrangement, letterStyle }} close={() => setPay(false)} />}
     </main>
   );
 }
