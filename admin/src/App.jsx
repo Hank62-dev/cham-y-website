@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Download, LogOut, RefreshCw, Search } from 'lucide-react';
+import { ArrowLeft, Download, Eye, EyeOff, LogOut, RefreshCw, Search } from 'lucide-react';
 import { exportOrders, getDashboard, getOrder, getOrders, login, updateStatus } from './api';
 
 const money = (value) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(value || 0);
@@ -11,9 +11,9 @@ function App() {
 }
 
 function Login({ onLogin }) {
-  const [password, setPassword] = useState(''); const [error, setError] = useState(''); const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useState(''); const [showPassword, setShowPassword] = useState(false); const [error, setError] = useState(''); const [loading, setLoading] = useState(false);
   async function submit(event) { event.preventDefault(); setLoading(true); setError(''); try { const result = await login(password); onLogin(result.data.token); } catch (e) { setError(e.message); } finally { setLoading(false); } }
-  return <main className="login-page"><form className="login-card" onSubmit={submit}><p className="eyebrow">CHẠM Ý · ADMIN</p><h1>Quản lý đơn hàng.</h1><p>Đăng nhập để xem doanh thu, kiểm tra đơn và cập nhật trạng thái xử lý.</p><input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mật khẩu admin" autoFocus /><button disabled={loading}>{loading ? 'Đang đăng nhập...' : 'Đăng nhập'}</button>{error && <div className="error">{error}</div>}</form></main>;
+  return <main className="login-page"><form className="login-card" onSubmit={submit}><p className="eyebrow">CHẠM Ý · ADMIN</p><h1>Quản lý đơn hàng.</h1><p>Đăng nhập để xem doanh thu, kiểm tra đơn và cập nhật trạng thái xử lý.</p><div className="password-field"><input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mật khẩu admin" autoFocus /><button type="button" className="password-toggle" aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'} onClick={() => setShowPassword((current) => !current)}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div><button disabled={loading}>{loading ? 'Đang đăng nhập...' : 'Đăng nhập'}</button>{error && <div className="error">{error}</div>}</form></main>;
 }
 
 function Dashboard({ token, onLogout }) {
