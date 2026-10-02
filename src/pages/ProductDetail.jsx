@@ -1,19 +1,28 @@
 import { useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Download } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Download, ShoppingBag } from 'lucide-react';
 import { toJpeg, toPng } from 'html-to-image';
 import Payment from '../components/common/Payment';
 import { getProduct, getReadyMadePrice } from '../data/siteData';
 import { money } from '../lib/formatters';
+import { addToCart } from '../lib/cart';
 
 function ProductDetail({ go, productId }) {
   const product = getProduct(productId);
   const [letters, setLetters] = useState('');
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
   const detailPreviewRef = useRef(null);
   const price = letters.length >= 2 && letters.length <= 5 ? getReadyMadePrice(product, letters) : 0;
 
   const updateLetters = (event) => {
     setLetters(event.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase());
+    setAddedToCart(false);
+  };
+
+  const handleAddToCart = () => {
+    if (!price) return;
+    addToCart(product, { letters }, price);
+    setAddedToCart(true);
   };
 
 
@@ -56,6 +65,7 @@ function ProductDetail({ go, productId }) {
           {letters.length >= 2 && <p className="name-price-hint">{letters.length} chữ · {money(price)}</p>}
           <div className="detail-total"><span>Giá sản phẩm</span><strong>{price ? money(price) : 'Chọn tên để xem giá'}</strong></div>
           <div className="detail-actions">
+            <button className="secondary bubble-button" type="button" disabled={!price} onClick={handleAddToCart}><ShoppingBag size={16} /> {addedToCart ? 'Đã thêm vào giỏ' : 'Thêm vào giỏ'}</button>
             <button className="primary bubble-button" type="button" disabled={!price} onClick={() => setIsPaymentOpen(true)}>Mua hàng <ArrowRight size={17} /></button>
             <button className="secondary bubble-button" type="button" onClick={() => go('customize')}>Tự phối lại</button>
           </div>
