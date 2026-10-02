@@ -9,10 +9,10 @@ export const namePrices = {
 };
 
 export const specialPriceTable = {
-  2: { 1: 95_000, 2: 97_000, 3: 98_000 },
-  3: { 1: 96_000, 2: 98_000, 3: 100_000 },
-  4: { 1: 98_000, 2: 99_000, 3: 101_000 },
-  5: { 1: 99_000, 2: 101_000, 3: 102_000 },
+  2: { 1: 86_000, 2: 88_000, 3: 89_000 },
+  3: { 1: 87_000, 2: 89_000, 3: 91_000 },
+  4: { 1: 89_000, 2: 90_000, 3: 92_000 },
+  5: { 1: 90_000, 2: 92_000, 3: 94_000 },
 };
 
 export const getSpecialPrice = (charmCount, letters) => specialPriceTable[letters.length]?.[charmCount] ?? 0;
