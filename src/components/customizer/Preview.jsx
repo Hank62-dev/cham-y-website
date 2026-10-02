@@ -13,6 +13,7 @@ function Preview({ selected, letters, previewRef, charmOptions = charms, cordCol
         <defs>
           <radialGradient id="bubbleGradient" cx="30%" cy="20%" r="85%"><stop offset="0" stopColor="#ffb3d9" /><stop offset="0.65" stopColor="#e33fa9" /><stop offset="1" stopColor="#b92d82" /></radialGradient>
           <filter id="bubbleShadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="5" stdDeviation="3" floodColor="#8c245f" floodOpacity=".3" /></filter>
+          <clipPath id="charmImageClip" clipPathUnits="userSpaceOnUse"><circle cx="0" cy="0" r="32" /></clipPath>
         </defs>
         <rect width="800" height="1000" rx="36" fill="#f0e9dc" />
         <rect x="24" y="24" width="752" height="952" rx="30" fill="none" stroke="#d9cfbc" strokeWidth="2" />
@@ -26,7 +27,7 @@ function Preview({ selected, letters, previewRef, charmOptions = charms, cordCol
         <line x1="400" y1="188" x2="400" y2="300" stroke={cordColor} strokeWidth="8" />
         <line x1="256" y1="300" x2="544" y2="300" stroke={cordColor} strokeWidth="8" strokeLinecap="square" />
         <line x1="260" y1="300" x2="260" y2="815" stroke={cordColor} strokeWidth="8" />
-        <line x1="540" y1="300" x2="540" y2="860" stroke={cordColor} strokeWidth="8" />
+        <line x1="540" y1="300" x2="540" y2="800" stroke={cordColor} strokeWidth="8" />
 
         <Pill x={260} width={150} text="Nhánh 1 · Charm" />
         <Pill x={540} width={130} text="Nhánh 2 · Chữ" />
@@ -45,7 +46,7 @@ function Preview({ selected, letters, previewRef, charmOptions = charms, cordCol
         })}
 
         <Tassel x={260} y={835} color={cordColor} />
-        <Tassel x={540} y={860} color={cordColor} />
+        <Tassel x={540} y={800} color={cordColor} />
         <Tassel x={690} y={835} color={cordColor} />
 
         <text x="260" y="945" textAnchor="middle" fontFamily={labelFont} fontSize="18" fontWeight="700" fill="#3a5a35">Charm</text>
@@ -67,7 +68,7 @@ function Slot({ x, y, value, fallback, filled = Boolean(value), letterStyle = 'b
   const bubble = filled && Boolean(value?.letter) && letterStyle === 'bubble';
   const fill = filled ? (bubble ? 'url(#bubbleGradient)' : letterStyle === 'basic' ? '#fffdf7' : '#d14fa5') : '#f0e9dc';
   const stroke = filled ? (letterStyle === 'basic' ? '#3a5a35' : '#d14fa5') : '#3a5a35';
-  return <><circle cx={x} cy={y} r="32" fill={fill} stroke={stroke} strokeWidth="3" strokeDasharray={filled ? undefined : '7 6'} filter={bubble ? 'url(#bubbleShadow)' : undefined} />{bubble && <ellipse cx={x - 11} cy={y - 16} rx="9" ry="5" fill="#fff" opacity=".7" transform={`rotate(-25 ${x - 11} ${y - 16})`} />}{value?.image ? <image href={value.image} x={x - 27} y={y - 27} width="54" height="54" preserveAspectRatio="xMidYMid slice" opacity=".9" /> : <text x={x} y={y + 9} textAnchor="middle" fontFamily="'DM Sans', Arial, sans-serif" fontSize="24" fontWeight="700" fill={bubble ? '#fff' : '#3a5a35'}>{value?.letter || value?.icon || fallback}</text>}</>;
+  return <><circle cx={x} cy={y} r="32" fill={fill} stroke={stroke} strokeWidth="3" strokeDasharray={filled ? undefined : '7 6'} filter={bubble ? 'url(#bubbleShadow)' : undefined} />{bubble && <ellipse cx={x - 11} cy={y - 16} rx="9" ry="5" fill="#fff" opacity=".7" transform={`rotate(-25 ${x - 11} ${y - 16})`} />}{value?.image ? <><g transform={`translate(${x} ${y})`} clipPath="url(#charmImageClip)"><image href={value.image} x="-50" y="-50" width="100" height="100" preserveAspectRatio="xMidYMid slice" opacity=".9" /></g><circle cx={x} cy={y} r="32" fill="none" stroke={stroke} strokeWidth="3" /></> : <text x={x} y={y + 9} textAnchor="middle" fontFamily="'DM Sans', Arial, sans-serif" fontSize="24" fontWeight="700" fill={bubble ? '#fff' : '#3a5a35'}>{value?.letter || value?.icon || fallback}</text>}</>;
 }
 
 function Tassel({ x, y, color }) {

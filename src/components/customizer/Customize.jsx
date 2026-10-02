@@ -8,12 +8,16 @@ import { getSpecialPrice, isOutOfStock, specialCharms } from '../../data/siteDat
 import { money } from '../../lib/formatters';
 
 const cordColors = [
-  { id: 'red', name: 'Đỏ sáng', value: '#ff4d5d' },
-  { id: 'yellow', name: 'Vàng sáng', value: '#ffd43d' },
-  { id: 'pink', name: 'Hồng sáng', value: '#ff78b5' },
-  { id: 'blue', name: 'Xanh dương sáng', value: '#4da3ff' },
-  { id: 'green', name: 'Xanh lá Chạm Ý', value: '#2f5b32' },
-  { id: 'white', name: 'Trắng', value: '#fffdf7' },
+  { id: 'khaki', name: 'Xanh ô liu nhạt / Khaki', value: '#c3c7a4', ink: '#2f3d2d' },
+  { id: 'bright-yellow', name: 'Vàng tươi', value: '#f1f071', ink: '#4a481b' },
+  { id: 'pale-yellow', name: 'Vàng nhạt', value: '#f1eb73', ink: '#4a481b' },
+  { id: 'cyan', name: 'Xanh dương / Cyan trầm', value: '#6aa5c3', ink: '#fff' },
+  { id: 'burgundy', name: 'Đỏ đô / Đỏ mận', value: '#942c33', ink: '#fff' },
+  { id: 'pale-pink', name: 'Hồng phấn nhạt', value: '#e5cad9', ink: '#6c3c55' },
+  { id: 'dusty-rose', name: 'Hồng đất / Be hồng', value: '#ded1c9', ink: '#5d4840' },
+  { id: 'pastel-blue', name: 'Xanh pastel / Xanh da trời nhạt', value: '#b8dae3', ink: '#315864' },
+  { id: 'mint', name: 'Xanh lá nhạt / Mint pastel', value: '#deead4', ink: '#3f5b3b' },
+  { id: 'white', name: 'Trắng', value: '#ffffff', ink: '#2f5b32' },
 ];
 
 function Customize() {
@@ -72,7 +76,7 @@ function Customize() {
         <div className="preview-wrap"><Preview selected={selected} letters={letters} pack="combo" previewRef={previewRef} charmOptions={specialCharms} cordColor={cordColor.value} arrangement={arrangement} letterStyle={letterStyle} /><div className="preview-actions"><button className="secondary" type="button" onClick={() => save('png')}><Download size={15} /> Lưu PNG</button><button className="secondary" type="button" onClick={() => save('jpg')}><Download size={15} /> Lưu JPG</button></div></div>
         <div className="custom-options">
           <OptionTitle no="01" title="Chọn màu dây" note="Dây phụ phối theo màu bạn chọn" />
-          <div className="color-choice-grid">{cordColors.map((color) => <button key={color.id} type="button" className={`color-choice ${cordColor.id === color.id ? 'chosen' : ''}`} style={{ '--choice-color': color.value, '--choice-ink': color.id === 'white' ? '#2f5b32' : '#fff' }} onClick={() => setCordColor(color)}><span style={{ background: color.value }} /><b>{color.name}</b>{cordColor.id === color.id && <Check size={13} />}</button>)}</div>
+          <div className="color-choice-grid">{cordColors.map((color) => <button key={color.id} type="button" className={`color-choice ${cordColor.id === color.id ? 'chosen' : ''}`} style={{ '--choice-color': color.value, '--choice-ink': color.ink }} onClick={() => setCordColor(color)}><span style={{ background: color.value }} /><b>{color.name}</b>{cordColor.id === color.id && <Check size={13} />}</button>)}</div>
           <p className="custom-note-box">Đã gồm các charm nhỏ phối thêm và dây phụ phù hợp với màu dây.</p>
 
           <OptionTitle no="02" title="Sắp xếp charm" note="Chọn cách hiển thị trên mô phỏng" />
@@ -83,7 +87,7 @@ function Customize() {
           <div className="charm-grid special-charm-grid">{specialCharms.map((charm) => { const soldOut = isOutOfStock(charm); return <button key={charm.id} type="button" disabled={soldOut} className={`charm-option ${selected.includes(charm.id) ? 'chosen' : ''} ${soldOut ? 'sold-out' : ''}`} onClick={() => toggleCharm(charm.id)}><span className={charm.tone}><img src={charm.image} alt={charm.name} /></span><b>{charm.name}</b><small>{soldOut ? 'Hết hàng' : money(charm.price)}</small>{selected.includes(charm.id) && <i><Check size={11} /></i>}</button>; })}</div>
 
           <OptionTitle no="04" title="Chọn mẫu chữ và ghi tên" note="Tối đa 5 chữ · tiếng Anh" />
-          <div className="letter-style-grid"><button type="button" className={letterStyle === 'bubble' ? 'chosen' : ''} onClick={() => setLetterStyle('bubble')}><span className="bubble-letter-sample"><i>D</i><i>A</i><i>S</i></span><b>Chữ bong bóng</b></button><button type="button" className={letterStyle === 'basic' ? 'chosen' : ''} onClick={() => setLetterStyle('basic')}><img src="/Chữ Basic.png" alt="Mẫu chữ basic" /><b>Chữ basic</b></button></div>
+          <div className="letter-style-grid"><button type="button" className={letterStyle === 'bubble' ? 'chosen' : ''} onClick={() => setLetterStyle('bubble')}><img className="letter-style-image" src="/ẢNH MẪU CHỮ/Chữ Bong Bóng.png" alt="Mẫu chữ bong bóng" /><b>Chữ bong bóng</b></button><button type="button" className={letterStyle === 'basic' ? 'chosen' : ''} onClick={() => setLetterStyle('basic')}><img className="letter-style-image" src="/ẢNH MẪU CHỮ/Chữ Basic.png" alt="Mẫu chữ basic" /><b>Chữ basic</b></button></div>
           <input className="name-input" maxLength="5" value={letters} onChange={(event) => setLetters(event.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase())} placeholder="NHẬP 2–5 CHỮ CÁI TIẾNG ANH" />
           {letters.length >= 2 && <div className="name-price-hint">{selectedCount} charm · {letters.length} chữ · {money(total)}</div>}
 

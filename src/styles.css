@@ -284,7 +284,7 @@ nav button{font-size:14px}
 .custom-note-box{margin:12px 0;color:#68766c;background:#f2ecdd;border:1px solid #e3dac7;border-radius:10px;padding:11px 13px;font-size:11px;line-height:1.5}
 .arrangement-grid button,.letter-style-grid button{display:flex;flex-direction:column;gap:5px}.arrangement-grid b,.letter-style-grid b{font-size:11px}.arrangement-grid small{color:#89938b;font-size:10px;line-height:1.4}
 .special-charm-grid{grid-template-columns:repeat(3,1fr)}
-.letter-style-grid button{text-align:center;align-items:center;justify-content:center;min-height:115px}.letter-style-grid img{width:100%;height:58px;object-fit:cover;object-position:center;border-radius:8px}.basic-letter-sample{display:grid;place-items:center;height:58px;width:100%;border-radius:8px;background:#f2ecdd;color:var(--green);font-size:30px;font-weight:800;letter-spacing:.08em}
+.letter-style-grid button{text-align:center;align-items:center;justify-content:center;height:145px;min-height:0;padding:4px;gap:2px;overflow:hidden}.letter-style-grid img{width:100%;max-width:100%;height:120px;object-fit:cover;object-position:center;border-radius:8px;background:#f2ecdd}.letter-style-grid .letter-style-image{display:block}
 .letter-style-grid{margin-bottom:10px}
 .bubble-letter-sample{display:flex;align-items:center;justify-content:center;gap:5px;height:58px;width:100%;border-radius:8px;background:linear-gradient(135deg,#fff2f8,#f8d9e9);overflow:hidden}.bubble-letter-sample i{position:relative;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(145deg,#ff9dcc 0%,#e33fa9 72%);color:#fff;font:800 18px 'DM Sans',sans-serif;font-style:normal;box-shadow:inset -4px -5px 0 #b92d82,0 4px 7px #b52d8040;animation:bubbleFloat 2.2s ease-in-out infinite}.bubble-letter-sample i:before{content:'';position:absolute;top:7px;left:8px;width:9px;height:5px;border-radius:50%;background:#fff9;transform:rotate(-25deg)}.bubble-letter-sample i:nth-child(2){width:44px;height:44px;animation-delay:-.7s;background:linear-gradient(145deg,#ffb3d9 0%,#e33fa9 74%)}.bubble-letter-sample i:nth-child(3){animation-delay:-1.3s;background:linear-gradient(145deg,#ff8fc7 0%,#d9369c 74%)}
 @keyframes bubbleFloat{0%,100%{transform:translateY(2px) rotate(-3deg)}50%{transform:translateY(-4px) rotate(3deg)}}
@@ -813,4 +813,91 @@ html::-webkit-scrollbar-thumb:hover{background:#234827}
 @media(max-width:800px){
   .product-detail .detail-visual img{transform:scale(2)}
   .product-detail .detail-visual:hover img{transform:scale(2.1)}
+}
+
+.special-charm-grid .charm-option>span{
+  width:56px;
+  height:56px;
+}
+
+.special-charm-grid .charm-option{
+  aspect-ratio:1;
+  padding:0;
+  overflow:hidden;
+}
+.special-charm-grid .charm-option.chosen{
+  padding:0;
+}
+.special-charm-grid .charm-option>span{
+  width:100%;
+  height:100%;
+  margin:0;
+  border-radius:8px;
+}
+.special-charm-grid .charm-option>span img{
+  object-fit:cover;
+  transform:scale(1.65);
+}
+.special-charm-grid .charm-option>b,
+.special-charm-grid .charm-option>small{
+  display:none;
+}
+.special-charm-grid .charm-option>b{
+  display:block;
+  position:absolute;
+  z-index:2;
+  left:50%;
+  bottom:6px;
+  max-width:calc(100% - 10px);
+  padding:3px 6px;
+  border:1px solid var(--green);
+  border-radius:6px;
+  background:#fff9f2ee;
+  color:var(--green);
+  font-size:9px;
+  line-height:1.2;
+  transform:translateX(-50%);
+  white-space:nowrap;
+}
+.letter-style-grid .letter-style-image{
+  transform:scale(1.7);
+  border:2px solid var(--green);
+  box-shadow:0 3px 0 rgba(47,91,50,.16);
+}
+.letter-style-grid>b,
+.letter-style-grid button>b{
+  display:inline-block;
+  position:relative;
+  z-index:3;
+  padding:4px 9px;
+  border:1px solid var(--green);
+  border-radius:6px;
+  background:#fff;
+  color:var(--green)!important;
+}
+.special-charm-grid{
+  grid-template-columns:repeat(4,1fr);
+}
+@media(max-width:560px){
+  .special-charm-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+.special-charm-grid .charm-option:hover,
+.special-charm-grid .charm-option.chosen:hover{
+  transform:none!important;
+  box-shadow:none!important;
+}
+.special-charm-grid .charm-option:not(.chosen):hover{
+  background:#fff!important;
+  color:var(--green)!important;
+  border-color:#ece7d9!important;
+}
+.special-charm-grid .charm-option:not(.chosen):hover>b{
+  color:var(--green)!important;
+}
+.special-charm-grid .charm-option.chosen>b{
+  color:var(--green)!important;
+  background:#fff9f2ee!important;
+  border-color:var(--green)!important;
 }
