@@ -138,6 +138,20 @@ body[data-admin-view="products"] .product-shortcut::after { content: 'Quản lý
 .product-form-grid .wide { grid-column: 1 / -1; }
 .upload-product { border: 1px dashed #c9d8c5; border-radius: 12px; padding: 12px; }
 .upload-product input { border: 0; padding: 4px 0; }
+.product-form-preview { display: block; width: 100%; height: 150px; margin-top: 12px; border: 1px solid #dfe5da; border-radius: 12px; background: var(--soft); object-fit: contain; }
+.checkbox-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.checkbox-fields .checkbox-field { min-width: 0; }
+.image-lightbox { z-index: 400 !important; }
+@media (max-width: 680px) { .checkbox-fields { gap: 10px; } .checkbox-fields .checkbox-field { font-size: 11px; } }
+@media (max-width: 680px) {
+  .admin-modal-backdrop { overflow-x: hidden; overflow-y: auto; }
+  .product-form-modal { width: calc(100vw - 28px); max-width: calc(100vw - 28px); overflow-x: hidden; padding: 22px 16px; }
+  .product-form-grid, .product-form-grid > label { min-width: 0; max-width: 100%; }
+  .product-form-grid > label { overflow-wrap: anywhere; word-break: break-word; }
+  .product-form-grid input, .product-form-grid textarea { width: 100%; min-width: 0; max-width: 100%; }
+  .upload-product { overflow-wrap: anywhere; word-break: break-word; }
+  .upload-product input[type="file"] { overflow: hidden; }
+}
 .checkbox-field { display: flex !important; align-items: center; grid-template-columns: auto 1fr; }
 .checkbox-field input[type="checkbox"] { appearance: none; width: 42px; height: 24px; flex: 0 0 42px; margin: 0; padding: 0; border: 0; border-radius: 999px; background: #d8ded7; position: relative; cursor: pointer; transition: background .2s ease; }
 .checkbox-field input[type="checkbox"]::after { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(35,65,40,.2); transition: transform .2s ease; }
@@ -147,7 +161,25 @@ body[data-admin-view="products"] .product-shortcut::after { content: 'Quản lý
 .product-form-actions button { min-width: 78px; height: 42px; border: 1px solid #cbdac8; border-radius: 11px; padding: 0 16px; background: #fff; color: #2d6337; cursor: pointer; font-family: Arial, sans-serif; font-size: 12px; font-weight: 800; line-height: 1; }
 .product-form-actions button.export { min-width: 150px; background: var(--green); color: #fff; border-color: var(--green); }
 .product-form-actions button:hover { transform: translateY(-1px); }
+@media (max-width: 680px) {
+  .products-page .product-toolbar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 10px; }
+  .products-page .product-toolbar > svg { display: none; }
+  .products-page .product-toolbar input { grid-column: 1 / -1; width: 100%; min-width: 0; }
+  .products-page .product-toolbar > button, .products-page .product-toolbar > .status-filter-dropdown { width: 100%; min-width: 0; }
+  .products-page .product-toolbar > .status-filter-dropdown { grid-column: 1 / -1; }
+  .products-page .product-toolbar > button { padding-left: 8px; padding-right: 8px; }
+  .products-page .product-pagination { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 12px 8px; }
+  .products-page .product-pagination > span { grid-area: 1 / 1; align-self: center; }
+  .products-page .product-page-size { grid-area: 1 / 2; }
+  .products-page .product-pagination-controls { grid-area: 2 / 1 / 3 / 3; justify-self: center; }
+}
 @media (max-width: 680px) { .product-stats { grid-template-columns: 1fr; } .product-toolbar { flex-wrap: wrap; } .product-toolbar input { flex-basis: 100%; } .product-admin-card { grid-template-columns: 1fr; } .product-admin-image { height: 190px; } .product-admin-meta { display: grid; gap: 5px; } .product-form-grid { grid-template-columns: 1fr; } .product-form-grid .wide { grid-column: auto; } }
+
+@media (max-width: 680px) {
+  .products-page .product-toolbar > button[type="submit"] { grid-area: 2 / 1; }
+  .products-page .product-toolbar > button[type="button"] { grid-area: 2 / 2; }
+  .products-page .product-toolbar > .status-filter-dropdown { grid-area: 3 / 1 / 4 / 3; }
+}
 @media (max-width: 680px) { .product-admin-actions, .product-actions-main, .product-actions-danger { width: 100%; } .product-actions-danger { justify-content: flex-end; } .product-pagination { grid-template-columns: 1fr auto; } .product-pagination > span { grid-column: 1; } .product-page-size { grid-column: 2; grid-row: 1; } .product-pagination-controls { grid-column: 1 / -1; justify-self: center; } }
 @media (max-width: 560px) { .admin-top { height: 68px; align-items: center; padding-top: 0; } .product-shortcut { top: 16px; right: 68px; padding: 9px 10px; font-size: 10px; } .admin-top .logout { width: 38px; height: 38px; padding: 0; gap: 0; justify-content: center; align-items: center; font-size: 0; line-height: 1; } .admin-top .logout svg { width: 17px; height: 17px; display: block; flex: 0 0 17px; } }
 .product-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 20px; background: rgba(255,255,255,.86); box-shadow: var(--shadow); }
@@ -174,6 +206,34 @@ textarea {
 .brand small {
   font-family: Arial, sans-serif !important;
 }
+
+/* Pastel bubbles for the product inventory summary cards. */
+.products-page .product-stats article {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.products-page .product-stats article::after {
+  content: '';
+  position: absolute;
+  right: -18px;
+  bottom: -24px;
+  z-index: 0;
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  opacity: .82;
+}
+
+.products-page .product-stats article > * {
+  position: relative;
+  z-index: 1;
+}
+
+.products-page .product-stats article:nth-child(1)::after { background: #f2cfe2; }
+.products-page .product-stats article:nth-child(2)::after { background: #e1efad; }
+.products-page .product-stats article:nth-child(3)::after { background: #cce4d3; }
 .product-table-row { min-height: 67px; border-top: 1px solid #f0ece4; cursor: pointer; transition: background .2s ease; }
 .product-table-row:hover { background: #fff8fc; }
 .product-table-image { position: relative; width: 48px; height: 52px; overflow: hidden; border-radius: 8px; background: var(--soft); cursor: zoom-in; }
@@ -196,3 +256,105 @@ textarea {
 .product-table-actions button:hover { background: var(--green); color: #fff; }.product-table-actions .hide-product { color: #936e12; border-color: #e6cf83; background: #fff9e7; }.product-table-actions .hide-product:hover { background: #f4d978; color: #654a00; }.product-table-actions .delete-product { color: #b72c50; border-color: #e4a5b3; background: #fff4f6; }.product-table-actions .delete-product:hover { background: #c83a5c; color: #fff; }
 .product-table-row.stock-not-managed { border-left: 4px solid #e6c557; }.product-table-row.stock-not-managed .product-table-image { margin-left: -4px; }
 @media (max-width: 700px) { .product-table-wrap { border-radius: 15px; }.product-table-head, .product-table-row { min-width: 900px; } }
+
+/* Subtle zebra stripes make both management tables easier to scan. */
+.orders-table tbody tr:nth-child(even) {
+  background: #f5f0e8;
+}
+
+.orders-table tbody tr:hover {
+  background: #fff3fa;
+}
+
+.product-table-row:nth-child(odd) {
+  background: #f5f0e8;
+}
+
+.product-table-row:hover {
+  background: #fff3fa;
+}
+
+.charm-count-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 9px;
+  border: 1px solid #c9dec7;
+  border-radius: 8px;
+  background: #edf6eb;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* Orders toolbar layout on phones. */
+@media (max-width: 700px) {
+  .admin-main:not(.products-page) .toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .admin-main:not(.products-page) .toolbar input { grid-area: 1 / 1 / 2 / 3; }
+  .admin-main:not(.products-page) .toolbar .custom-select:first-of-type { grid-area: 2 / 1 / 3 / 3; }
+  .admin-main:not(.products-page) .toolbar > button[type="submit"] { grid-area: 3 / 1; }
+  .admin-main:not(.products-page) .toolbar > button[type="button"]:not(.export) { grid-area: 3 / 2; }
+  .admin-main:not(.products-page) .toolbar .custom-select:nth-of-type(2) { grid-area: 4 / 1; }
+  .admin-main:not(.products-page) .toolbar .export { grid-area: 4 / 2; }
+
+  .admin-main:not(.products-page) .toolbar .custom-select:first-of-type .custom-select-trigger {
+    background: #fff !important;
+    border: 1px solid var(--green) !important;
+    border-color: var(--green) !important;
+    border-radius: 11px !important;
+    color: var(--green) !important;
+  }
+
+  .admin-main:not(.products-page) .toolbar .custom-select:first-of-type .custom-select-chevron {
+    border-color: var(--green) !important;
+    color: var(--green) !important;
+  }
+}
+
+@media (min-width: 701px) {
+  .admin-main:not(.products-page) .toolbar > input { order: 1; }
+  .admin-main:not(.products-page) .toolbar > button[type="submit"] { order: 2; }
+  .admin-main:not(.products-page) .toolbar .custom-select:first-of-type { order: 3; }
+  .admin-main:not(.products-page) .toolbar > button[type="button"]:not(.export) { order: 4; }
+  .admin-main:not(.products-page) .toolbar .custom-select:nth-of-type(2) { order: 5; }
+  .admin-main:not(.products-page) .toolbar > .export { order: 6; }
+}
+
+@media (max-width: 700px) {
+  .admin-main:not(.products-page) .toolbar input {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+    width: 100% !important;
+  }
+
+  .admin-main:not(.products-page) .toolbar .custom-select:first-of-type {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+  }
+
+  .admin-main:not(.products-page) .toolbar > button[type="submit"] {
+    grid-column: 1 !important;
+    grid-row: 3 !important;
+  }
+
+  .admin-main:not(.products-page) .toolbar > button[type="button"]:not(.export) {
+    grid-column: 2 !important;
+    grid-row: 3 !important;
+  }
+
+  .admin-main:not(.products-page) .toolbar .custom-select:nth-of-type(2) {
+    grid-column: 1 !important;
+    grid-row: 4 !important;
+  }
+
+  .admin-main:not(.products-page) .toolbar .export {
+    grid-column: 2 !important;
+    grid-row: 4 !important;
+  }
+}
