@@ -4,6 +4,12 @@ import { makeOrderCode } from '../utils/order-code.js';
 import { fail, ok } from '../utils/api.js';
 import { calculateOrder, orderInputSchema } from '../services/order.service.js';
 import { uploadImage } from '../services/upload.service.js';
+import { env } from '../config/env.js';
+
+function absoluteProductImage(image: string) {
+  if (!image || /^https?:\/\//i.test(image)) return image;
+  return `${env.frontendUrl.replace(/\/$/, '')}/${image.replace(/^\//, '').split(' ').map(encodeURIComponent).join('%20')}`;
+}
 
 function parsePayload(req: Request) {
   const raw = typeof req.body.payload === 'string' ? JSON.parse(req.body.payload) : req.body;
@@ -15,6 +21,7 @@ export async function createOrder(req: Request, res: Response) {
     const input = parsePayload(req);
     if (input.items.some((item) => item.productType === 'CUSTOM') && input.items.length > 1) return fail(res, 'Custom product must be ordered separately');
     const calculated = calculateOrder(input);
+    calculated.items = calculated.items.map((item) => ({ ...item, productImage: absoluteProductImage(item.productImage) }));
     const files = (req.files || {}) as { [fieldname: string]: Express.Multer.File[] };
     const previewImage = await uploadImage(files.previewImage?.[0], input.previewImageUrl);
     const paymentProofImage = await uploadImage(files.paymentProofImage?.[0]);
