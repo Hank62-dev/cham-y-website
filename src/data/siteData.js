@@ -36,12 +36,10 @@ export const charms = charmNames.map((name, index) => ({
 export const isOutOfStock = (item) => item?.stock !== null && item?.stock <= 0;
 
 export const specialCharms = [
-  { id: 'special-flower-mix', name: 'Hoa Hoè', image: '/ẢNH CHARM SPECIAL/Hoa Hoè.png', tone: 'lime', price: 9_000, stock: null },
-  { id: 'special-bling', name: 'Bling Bling', image: '/ẢNH CHARM SPECIAL/Bling Bling.png', tone: 'pink', price: 9_000, stock: null },
-  ...[20, 21, 22, 23, 24].map((number, index) => ({
-    id: `special-cham-y-${number}`,
-    name: `Charm Chạm Ý ${number}`,
-    image: `/Chạm ý. Charm/${number}.png`,
+  ['Bling Bling.png', 'Bright Silver.png', 'Candy Crush.png', 'Fluffy Guys.png', 'Hoa Hoè.png', 'Little Star.png', 'Twisted Heart.png'].map((fileName, index) => ({
+    id: `special-${fileName.replace(/\.png$/i, '').toLowerCase().replace(/\s+/g, '-')}`,
+    name: fileName.replace(/\.png$/i, ''),
+    image: `/ẢNH CHARM SPECIAL/${fileName}`,
     tone: index % 2 ? 'pink' : 'lime',
     price: 9_000,
     stock: null,
