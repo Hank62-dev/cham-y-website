@@ -12,6 +12,7 @@ app.use(helmet());
 const allowedOrigins = [env.frontendUrl, env.adminFrontendUrl]
   .filter(Boolean)
   .map((origin) => origin.replace(/\/$/, ''));
+allowedOrigins.push('http://localhost:5173', 'http://localhost:5174', 'http://127.0.0.1:5173', 'http://127.0.0.1:5174');
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json({ limit: '2mb' }));
 app.get('/health', (_req, res) => res.json({ success: true, data: { status: 'ok' } }));
