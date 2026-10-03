@@ -46,6 +46,6 @@ export async function lookupOrder(req: Request, res: Response) {
   const phone = String(req.body.phone || '').trim();
   if (!phone) return fail(res, 'Phone is required');
   const orders = await Order.find({ 'customer.phone': phone }).sort({ createdAt: -1 }).lean();
-  if (!orders.length) return fail(res, 'No orders found', 404);
+  if (!orders.length) return fail(res, 'Không tìm thấy đơn hàng với số điện thoại này', 404);
   return ok(res, orders);
 }
