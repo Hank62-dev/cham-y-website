@@ -9,7 +9,10 @@ import { errorHandler } from './middleware/error.middleware.js';
 
 export const app = express();
 app.use(helmet());
-app.use(cors({ origin: [env.frontendUrl, env.adminFrontendUrl].filter(Boolean) }));
+const allowedOrigins = [env.frontendUrl, env.adminFrontendUrl]
+  .filter(Boolean)
+  .map((origin) => origin.replace(/\/$/, ''));
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json({ limit: '2mb' }));
 app.get('/health', (_req, res) => res.json({ success: true, data: { status: 'ok' } }));
 app.use('/api/orders', orderRoutes);
