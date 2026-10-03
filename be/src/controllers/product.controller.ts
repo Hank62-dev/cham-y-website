@@ -3,10 +3,17 @@ import { Product } from '../models/product.model.js';
 import { fail, ok } from '../utils/api.js';
 import { serializeProduct } from '../services/product.service.js';
 import { uploadImage } from '../services/upload.service.js';
+import { env } from '../config/env.js';
 
 function bodyNumber(value: unknown, fallback = 0) {
   const number = Number(value);
   return Number.isFinite(number) ? number : fallback;
+}
+
+function serializeAdminProduct(product: any) {
+  const value = serializeProduct(product);
+  if (value.image && !/^https?:\/\//i.test(value.image)) value.image = `${env.frontendUrl.replace(/\/$/, '')}/${value.image.replace(/^\//, '').split(' ').map(encodeURIComponent).join('%20')}`;
+  return value;
 }
 
 export async function listPublicProducts(_req: Request, res: Response) {
@@ -27,13 +34,13 @@ export async function listAdminProducts(req: Request, res: Response) {
   if (req.query.active === 'false') query.active = false;
   if (search) query.$or = [{ name: new RegExp(search, 'i') }, { productCode: new RegExp(search, 'i') }];
   const products = await Product.find(query).sort({ sortOrder: 1, createdAt: 1 }).lean();
-  return ok(res, products.map(serializeProduct));
+  return ok(res, products.map(serializeAdminProduct));
 }
 
 export async function getAdminProduct(req: Request, res: Response) {
   const product = await Product.findById(req.params.id).lean();
   if (!product) return fail(res, 'Product not found', 404);
-  return ok(res, serializeProduct(product));
+  return ok(res, serializeAdminProduct(product));
 }
 
 export async function createProduct(req: Request, res: Response) {
@@ -41,7 +48,7 @@ export async function createProduct(req: Request, res: Response) {
     const image = await uploadImage((req.files as { image?: Express.Multer.File[] })?.image?.[0], req.body.imageUrl, 'cham-y/products');
     if (!image) return fail(res, 'Product image is required', 400);
     const product = await Product.create({ productCode: String(req.body.productCode || '').trim(), name: String(req.body.name || '').trim(), slug: String(req.body.slug || req.body.productCode || '').trim().toLowerCase(), description: String(req.body.description || '').trim(), type: 'READY', image, accent: String(req.body.accent || '#f2ecdd'), charmCount: bodyNumber(req.body.charmCount), stock: bodyNumber(req.body.stock), stockManaged: req.body.stockManaged === 'true', lowStockThreshold: bodyNumber(req.body.lowStockThreshold, 3), active: req.body.active !== 'false', sortOrder: bodyNumber(req.body.sortOrder) });
-    return ok(res, serializeProduct(product), 201);
+    return ok(res, serializeAdminProduct(product), 201);
   } catch (error: any) { return fail(res, error?.code === 11000 ? 'Product code or slug already exists' : error.message, 400); }
 }
 
@@ -54,7 +61,7 @@ export async function updateProduct(req: Request, res: Response) {
     if (image) updates.image = image;
     Object.assign(current, updates);
     await current.save();
-    return ok(res, serializeProduct(current));
+    return ok(res, serializeAdminProduct(current));
   } catch (error: any) { return fail(res, error?.code === 11000 ? 'Product code or slug already exists' : error.message, 400); }
 }
 
@@ -63,13 +70,13 @@ export async function updateProductStock(req: Request, res: Response) {
   if (!Number.isInteger(amount)) return fail(res, 'Stock amount must be an integer', 400);
   const product = await Product.findOneAndUpdate({ _id: req.params.id, ...(amount < 0 ? { stock: { $gte: Math.abs(amount) } } : {}) }, { $inc: { stock: amount }, $set: { stockManaged: true } }, { new: true }).lean();
   if (!product) return fail(res, amount < 0 ? 'Stock cannot be negative' : 'Product not found', 400);
-  return ok(res, serializeProduct(product));
+  return ok(res, serializeAdminProduct(product));
 }
 
 export async function toggleProduct(req: Request, res: Response) {
   const product = await Product.findByIdAndUpdate(req.params.id, { active: Boolean(req.body.active) }, { new: true }).lean();
   if (!product) return fail(res, 'Product not found', 404);
-  return ok(res, serializeProduct(product));
+  return ok(res, serializeAdminProduct(product));
 }
 
 export async function deleteProduct(req: Request, res: Response) {

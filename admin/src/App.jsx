@@ -11,7 +11,12 @@ const productImageUrl = (image) => image && /^https?:\/\//i.test(image) ? image 
 
 function App() {
   const [token, setToken] = useState(() => localStorage.getItem('cham-y-admin-token'));
-  return token ? <><a className="product-shortcut" href="/#products">Sản phẩm & tồn kho</a><Dashboard token={token} onLogout={() => { localStorage.removeItem('cham-y-admin-token'); setToken(null); }} /></> : <Login onLogin={(next) => { localStorage.setItem('cham-y-admin-token', next); setToken(next); }} />;
+  const [view, setView] = useState(() => window.location.hash === '#products' ? 'products' : 'orders');
+  useEffect(() => { const onHashChange = () => setView(window.location.hash === '#products' ? 'products' : 'orders'); window.addEventListener('hashchange', onHashChange); return () => window.removeEventListener('hashchange', onHashChange); }, []);
+  function showProducts(event) { event.preventDefault(); window.history.pushState({}, '', '#products'); setView('products'); }
+  function showOrders() { window.history.pushState({}, '', window.location.pathname); setView('orders'); }
+  if (!token) return <Login onLogin={(next) => { localStorage.setItem('cham-y-admin-token', next); setToken(next); }} />;
+  return <><a className="product-shortcut" href="#products" onClick={showProducts}>Sản phẩm & tồn kho</a>{view === 'products' ? <ProductManagement token={token} onBack={showOrders} /> : <Dashboard token={token} onLogout={() => { localStorage.removeItem('cham-y-admin-token'); setToken(null); }} />}</>;
 }
 
 function Login({ onLogin }) {
