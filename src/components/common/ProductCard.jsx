@@ -16,12 +16,11 @@ function ProductCard({ product, go }) {
           <p>{product.description}</p>
         </div>
       </div>
-      <button className="card-link" type="button" onClick={openDetail}>
+      <div className="product-card-actions"><button className="card-link" type="button" onClick={openDetail}>
         Mua hàng <ArrowRight size={13} />
-      </button>
-      <button className="card-cart-button" type="button" onClick={(event) => { event.stopPropagation(); addToCart(product); }}>
+      </button><button className="card-cart-button" type="button" onClick={(event) => { event.stopPropagation(); addToCart(product); }}>
         <ShoppingBag size={13} /> Thêm giỏ
-      </button>
+      </button></div>
     </article>
   );
 }
