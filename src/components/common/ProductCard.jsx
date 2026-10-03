@@ -2,7 +2,7 @@ import { ArrowRight, ShoppingBag } from 'lucide-react';
 import { addToCart } from '../../lib/cart';
 
 function ProductCard({ product, go }) {
-  const openDetail = () => go?.('detail', { product: product.id });
+  const openDetail = () => go?.('detail', { product: product.id || product.productCode || product.slug });
 
   return (
     <article className="product-card" onClick={openDetail}>

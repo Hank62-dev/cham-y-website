@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { env } from './env.js';
+import { seedInitialProducts } from '../services/product.service.js';
 
 export async function connectDb() {
   if (!env.mongoUri) {
@@ -12,4 +13,5 @@ export async function connectDb() {
     maxPoolSize: 10,
   });
   console.log('MongoDB connected');
+  await seedInitialProducts();
 }

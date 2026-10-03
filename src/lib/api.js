@@ -1,5 +1,12 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+export async function fetchProducts() {
+  const response = await fetch(`${API_URL}/products`);
+  const result = await response.json().catch(() => null);
+  if (!response.ok) throw new Error(result?.message || 'Không thể tải sản phẩm');
+  return result.data;
+}
+
 export async function createOrder(payload, files = {}) {
   const form = new FormData();
   form.append('payload', JSON.stringify(payload));

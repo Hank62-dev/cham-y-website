@@ -30,6 +30,7 @@ const orderSchema = new Schema({
   totalAmount: { type: Number, min: 0, required: true },
   status: { type: String, enum: ['PENDING', 'PROCESSING', 'COMPLETED', 'REJECTED'], default: 'PENDING', index: true },
   rejectionReason: { type: String, default: null, trim: true },
+  stockReserved: { type: Boolean, default: false },
   completedAt: { type: Date, default: null },
 }, { timestamps: true });
 

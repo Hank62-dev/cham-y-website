@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { Product } from '../models/product.model.js';
+import { getMatrixPrice } from '../config/pricing.js';
 
 export const orderInputSchema = z.object({
   customer: z.object({
@@ -18,32 +20,30 @@ export const orderInputSchema = z.object({
   previewImageUrl: z.string().url().optional(),
 });
 
-const readyPrices: Record<string, number> = {
-  'japanese-wish': 96000,
-  'sunny-dream': 95000,
-  'sweet-love': 96000,
-};
-
-function serverUnitPrice(item: z.infer<typeof orderInputSchema>['items'][number]) {
+async function serverUnitPrice(item: z.infer<typeof orderInputSchema>['items'][number], product?: any) {
   if (item.productType === 'CUSTOM') {
     const count = Number((item.customizationData as { selectedCount?: number } | undefined)?.selectedCount || 1);
     const letters = String((item.customizationData as { letters?: string } | undefined)?.letters || '').length;
-    const priceTable: Record<number, Record<number, number>> = {
-      2: { 1: 86000, 2: 88000, 3: 89000 },
-      3: { 1: 87000, 2: 89000, 3: 91000 },
-      4: { 1: 89000, 2: 90000, 3: 92000 },
-      5: { 1: 90000, 2: 92000, 3: 94000 },
-    };
-    return priceTable[letters]?.[count] ?? 0;
+    return getMatrixPrice(letters, count);
   }
-  return readyPrices[item.productId] ?? item.unitPrice;
+  if (!product || !product.active) return 0;
+  const letters = String((item.customizationData as { letters?: string } | undefined)?.letters || '').length;
+  return getMatrixPrice(letters, product.charmCount);
 }
 
-export function calculateOrder(input: z.infer<typeof orderInputSchema>) {
-  const items = input.items.map((item) => {
-    const unitPrice = serverUnitPrice(item);
-    return { ...item, unitPrice, subtotal: unitPrice * item.quantity };
-  });
+export async function calculateOrder(input: z.infer<typeof orderInputSchema>) {
+  const readyIds = input.items.filter((item) => item.productType === 'READY').map((item) => item.productId);
+  const products = await Product.find({ productCode: { $in: readyIds }, active: true }).lean();
+  const productMap = new Map(products.map((product) => [product.productCode, product]));
+  const items = await Promise.all(input.items.map(async (item) => {
+    const product = item.productType === 'READY' ? productMap.get(item.productId) : undefined;
+    const unitPrice = await serverUnitPrice(item, product);
+    if (item.productType === 'READY' && !product) throw new Error('Product is not available');
+    if (!unitPrice) throw new Error('Invalid product price configuration');
+    const productName = product?.name || item.productName;
+    const productImage = product?.image?.url || item.productImage;
+    return { ...item, productName, productImage, unitPrice, subtotal: unitPrice * item.quantity };
+  }));
   const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
   return { items, subtotal, totalAmount: subtotal };
 }

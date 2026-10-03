@@ -11,6 +11,8 @@ import CartDrawer from '../components/common/CartDrawer';
 import { readCart } from '../lib/cart';
 import Customize from '../components/customizer/Customize';
 import { createPath, getProductId, getRoute } from '../lib/router';
+import { products as fallbackProducts } from '../data/siteData';
+import { fetchProducts } from '../lib/api';
 
 function App() {
   const [location, setLocation] = useState(() => ({
@@ -18,7 +20,12 @@ function App() {
     productId: getProductId(),
   }));
   const [cartOpen, setCartOpen] = useState(false);
+  const [products, setProducts] = useState(fallbackProducts);
   const [cartCount, setCartCount] = useState(() => readCart().reduce((sum, item) => sum + item.quantity, 0));
+
+  useEffect(() => {
+    fetchProducts().then((items) => { if (Array.isArray(items) && items.length) setProducts(items); }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     const updateCart = () => setCartCount(readCart().reduce((sum, item) => sum + item.quantity, 0));
@@ -79,9 +86,9 @@ function App() {
   const renderPage = () => {
     switch (location.page) {
       case 'shop':
-        return <Shop go={go} />;
+        return <Shop go={go} products={products} />;
       case 'detail':
-        return <ProductDetail go={go} productId={location.productId} />;
+        return <ProductDetail go={go} productId={location.productId} products={products} />;
       case 'guide':
         return <Guide go={go} />;
       case 'about':

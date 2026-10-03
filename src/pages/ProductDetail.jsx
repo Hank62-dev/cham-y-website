@@ -6,8 +6,8 @@ import { getProduct, getReadyMadePrice } from '../data/siteData';
 import { money } from '../lib/formatters';
 import { addToCart } from '../lib/cart';
 
-function ProductDetail({ go, productId }) {
-  const product = getProduct(productId);
+function ProductDetail({ go, productId, products }) {
+  const product = (products || []).find((item) => item.id === productId || item.productCode === productId || item.slug === productId) || getProduct(productId);
   const [letters, setLetters] = useState('');
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
