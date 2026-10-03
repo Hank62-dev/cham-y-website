@@ -13,7 +13,7 @@ function App() {
   const [token, setToken] = useState(() => localStorage.getItem('cham-y-admin-token'));
   const [view, setView] = useState(() => window.location.hash === '#products' ? 'products' : 'orders');
   useEffect(() => { const onHashChange = () => setView(window.location.hash === '#products' ? 'products' : 'orders'); window.addEventListener('hashchange', onHashChange); return () => window.removeEventListener('hashchange', onHashChange); }, []);
-  function showProducts(event) { event.preventDefault(); window.history.pushState({}, '', '#products'); setView('products'); }
+  function showProducts(event) { if (window.location.hash === '#products') { event.preventDefault(); window.history.pushState({}, '', window.location.pathname); setView('orders'); return; } event.preventDefault(); window.history.pushState({}, '', '#products'); setView('products'); }
   function showOrders() { window.history.pushState({}, '', window.location.pathname); setView('orders'); }
   if (!token) return <Login onLogin={(next) => { localStorage.setItem('cham-y-admin-token', next); setToken(next); }} />;
   return <><a className="product-shortcut" href="#products" onClick={showProducts}>Sản phẩm & tồn kho</a>{view === 'products' ? <ProductManagement token={token} onBack={showOrders} /> : <Dashboard token={token} onLogout={() => { localStorage.removeItem('cham-y-admin-token'); setToken(null); }} />}</>;

@@ -14,7 +14,7 @@ export const getDashboard = (token) => request('/admin/dashboard', { headers: { 
 export const getOrders = (token, query) => request(`/admin/orders?${new URLSearchParams(query)}`, { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json());
 export const getOrder = (token, id) => request(`/admin/orders/${id}`, { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json());
 export const updateStatus = (token, id, status, rejectionReason = '') => request(`/admin/orders/${id}/status`, { method: 'PATCH', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify({ status, rejectionReason }) }).then((r) => r.json());
-export const getProducts = (token, search = '') => request(`/admin/products${search ? `?search=${encodeURIComponent(search)}` : ''}`, { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json());
+export const getProducts = (token, search = '', active = '') => { const params = new URLSearchParams(); if (search) params.set('search', search); if (active !== '') params.set('active', active); const query = params.toString(); return request(`/admin/products${query ? `?${query}` : ''}`, { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json()); };
 async function sendProduct(token, path, method, form) {
   const response = await fetch(`${API_URL}${path}`, { method, headers: { Authorization: `Bearer ${token}` }, body: form });
   const result = await response.json().catch(() => null);
