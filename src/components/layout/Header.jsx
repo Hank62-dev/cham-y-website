@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowUpRight, Menu, ShoppingBag, X } from 'lucide-react';
+import { ArrowUpRight, Menu, ShoppingCart, X } from 'lucide-react';
 import { asset } from '../../lib/assets';
 
 function Header({ page, go, cartCount = 0, openCart }) {
@@ -49,7 +49,7 @@ function Header({ page, go, cartCount = 0, openCart }) {
         <button className="nav-cta" type="button" onClick={() => navigate('customize')}>
           Tự phối ngay <span>↗</span>
         </button>
-        <button className="cart-button" type="button" onClick={openCart} aria-label={`Mở giỏ hàng${cartCount ? `, ${cartCount} sản phẩm` : ''}`}><ShoppingBag size={17} />{cartCount > 0 && <span className="cart-count" aria-label={`${cartCount} sản phẩm`}>{cartCount}</span>}</button>
+        <button className="cart-button" type="button" onClick={openCart} aria-label={`Mở giỏ hàng${cartCount ? `, ${cartCount} sản phẩm` : ''}`}><ShoppingCart className="cart-icon" size={20} strokeWidth={2.4} />{cartCount > 0 && <span className="cart-count" aria-label={`${cartCount} sản phẩm`}>{cartCount}</span>}</button>
       </header>
       {open && <button className="mobile-menu-backdrop" type="button" onClick={() => setOpen(false)} aria-label="Đóng menu" />}
     </>
