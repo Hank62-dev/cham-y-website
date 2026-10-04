@@ -105,12 +105,13 @@ function Customize() {
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     try {
       const dataUrl = await toPng(previewRef.current, { pixelRatio: 2, backgroundColor: '#f1ebdc', cacheBust: true });
-      const blob = await (await fetch(dataUrl)).blob();
-      const imageUrl = URL.createObjectURL(blob);
       if (previewWindow && !previewWindow.closed) {
-        previewWindow.location.href = imageUrl;
-        window.setTimeout(() => URL.revokeObjectURL(imageUrl), 60_000);
+        previewWindow.document.open();
+        previewWindow.document.write(`<!doctype html><html><head><title>Ảnh preview Chạm Ý</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#f1ebdc"><img src="${dataUrl}" alt="Ảnh preview Chạm Ý" style="display:block;max-width:100%;max-height:100vh;object-fit:contain"></body></html>`);
+        previewWindow.document.close();
       } else {
+        const blob = await (await fetch(dataUrl)).blob();
+        const imageUrl = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = imageUrl;
         link.target = '_blank';
