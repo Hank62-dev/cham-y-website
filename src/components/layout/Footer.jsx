@@ -4,7 +4,7 @@ import { asset } from '../../lib/assets';
 const contactLinks = {
   messenger: 'https://m.me/chamy.charm',
   instagram: 'https://ig.me/m/chamy.charm',
-  phone: 'tel:+84965488386',
+  phone: 'tel:+84936423989',
 };
 
 function Footer() {
@@ -18,7 +18,7 @@ function Footer() {
       <div className="footer-contact">
         <span className="footer-label">LIÊN HỆ VỚI CHẠM Ý</span>
         <a className="footer-phone" href={contactLinks.phone}>
-          <Phone size={15} /> 0965 4883 86
+          <Phone size={15} /> 0936 423 989
         </a>
         <p>Gọi hoặc nhắn tin để được tư vấn mẫu và đặt món riêng.</p>
         <div className="contact-actions">

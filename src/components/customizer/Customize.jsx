@@ -74,10 +74,25 @@ function Customize() {
     try {
       const options = { pixelRatio: 2, backgroundColor: '#f1ebdc', cacheBust: true };
       const dataUrl = format === 'jpg' ? await toJpeg(previewRef.current, { ...options, quality: 0.92 }) : await toPng(previewRef.current, options);
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.download = `cham-y-preview.${format}`;
-      link.click();
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], `cham-y-preview.${format}`, { type: blob.type || `image/${format === 'jpg' ? 'jpeg' : 'png'}` });
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isIOS && navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
+        await navigator.share({ files: [file], title: 'Ảnh preview Chạm Ý' });
+      } else if (isIOS) {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(file);
+        link.target = '_blank';
+        link.rel = 'noreferrer';
+        link.click();
+        window.setTimeout(() => URL.revokeObjectURL(link.href), 60_000);
+      } else {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(file);
+        link.download = file.name;
+        link.click();
+        window.setTimeout(() => URL.revokeObjectURL(link.href), 1_000);
+      }
     } finally {
       setShowSavedDetails(false);
     }
