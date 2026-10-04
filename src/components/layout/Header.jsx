@@ -21,7 +21,7 @@ function Header({ page, go, cartCount = 0, openCart }) {
     <>
       <header className="site-header">
         <button className="brand" type="button" onClick={() => navigate('home')}>
-          <img src={asset('logoChamY-cream.png')} alt="Logo Chạm Ý" />
+          <img src={asset('logoChamY.jpg')} alt="Logo Chạm Ý" />
           <span>CHẠM Ý<small>chạm vào cá tính</small></span>
         </button>
 

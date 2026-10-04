@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowLeft, Download, Eye, EyeOff, LogOut, MoreHorizontal, RefreshCw, Search, ZoomIn, X } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ClipboardList, Download, Eye, EyeOff, Globe2, LogOut, MoreHorizontal, Package, RefreshCw, Search, ZoomIn, X } from 'lucide-react';
 import { exportOrders, getDashboard, getOrder, getOrders, login, updateStatus } from './api';
 import OrderDetailView from './OrderDetailView';
 import ProductManagement from './ProductManagement';
@@ -14,10 +14,31 @@ function App() {
   const [token, setToken] = useState(() => localStorage.getItem('cham-y-admin-token'));
   const [view, setView] = useState(() => window.location.hash === '#products' ? 'products' : 'orders');
   useEffect(() => { const onHashChange = () => setView(window.location.hash === '#products' ? 'products' : 'orders'); window.addEventListener('hashchange', onHashChange); return () => window.removeEventListener('hashchange', onHashChange); }, []);
-  function showProducts(event) { if (window.location.hash === '#products') { event.preventDefault(); window.history.pushState({}, '', window.location.pathname); setView('orders'); return; } event.preventDefault(); window.history.pushState({}, '', '#products'); setView('products'); }
+  function showProducts() { if (window.location.hash === '#products') { window.history.pushState({}, '', window.location.pathname); setView('orders'); return; } window.history.pushState({}, '', '#products'); setView('products'); }
   function showOrders() { window.history.pushState({}, '', window.location.pathname); setView('orders'); }
   if (!token) return <Login onLogin={(session) => { localStorage.setItem('cham-y-admin-token', session.token); localStorage.setItem('cham-y-admin-refresh-token', session.refreshToken); setToken(session.token); }} />;
-  return <><a className="product-shortcut" href="#products" onClick={showProducts}>Sản phẩm & tồn kho</a>{view === 'products' ? <ProductManagement token={token} onBack={showOrders} /> : <Dashboard token={token} onLogout={() => { localStorage.removeItem('cham-y-admin-token'); localStorage.removeItem('cham-y-admin-refresh-token'); setToken(null); }} />}</>;
+  return <><ManagementMenu view={view} onProducts={showProducts} onOrders={showOrders} /><div className="admin-view-root">{view === 'products' ? <ProductManagement token={token} onBack={showOrders} /> : <Dashboard token={token} onLogout={() => { localStorage.removeItem('cham-y-admin-token'); localStorage.removeItem('cham-y-admin-refresh-token'); setToken(null); }} />}</div></>;
+}
+
+function ManagementMenu({ view, onProducts, onOrders }) {
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
+  useEffect(() => {
+    const close = (event) => { if (!menuRef.current?.contains(event.target)) setOpen(false); };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, []);
+  const choose = (action) => { setOpen(false); action(); };
+  return <div className="management-menu" ref={menuRef}>
+    <button className={`management-trigger ${open ? 'is-open' : ''}`} type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open}>
+      <span>Quản lý</span><ChevronDown size={15} />
+    </button>
+    {open && <div className="management-popover">
+      <button className={view === 'orders' ? 'active' : ''} type="button" onClick={() => choose(onOrders)}><ClipboardList size={16} /><span>Quản lý đơn hàng</span></button>
+      <button className={view === 'products' ? 'active' : ''} type="button" onClick={() => choose(onProducts)}><Package size={16} /><span>Quản lý sản phẩm</span></button>
+      <button type="button" onClick={() => choose(() => window.open(customerSiteUrl, '_blank', 'noopener,noreferrer'))}><Globe2 size={16} /><span>Truy cập hệ thống</span></button>
+    </div>}
+  </div>;
 }
 
 function Login({ onLogin }) {
