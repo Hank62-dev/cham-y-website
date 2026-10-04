@@ -504,6 +504,14 @@ main:not(.customizer) .product-card:hover .product-image::after{transform:transl
 /* Keep the header brand mark static and clean. */
 .site-header .brand,.site-header .brand:hover,.site-header .brand:active{background:transparent!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important;color:var(--green)!important;animation:none!important;transform:none!important;filter:none!important;transition:none!important}
 .site-header .brand::before,.site-header .brand::after{display:none!important;content:none!important}
+
+.preview-save-overlay{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(28,57,41,.75);backdrop-filter:blur(6px)}
+.preview-save-card{position:relative;width:min(560px,100%);max-height:92vh;overflow:auto;padding:24px;border:1px solid #eadfd1;border-radius:24px;background:var(--cream);box-shadow:0 24px 80px rgba(23,43,29,.35);text-align:center}
+.preview-save-card h2{margin:0 0 16px;color:var(--green);font-size:24px}
+.preview-save-card img{display:block;width:100%;max-height:70vh;object-fit:contain;border-radius:14px;background:#f1ebdc}
+.preview-save-card>p:last-child{margin:14px 0 0;color:#718075;font-size:12px;line-height:1.6}
+.preview-save-card .close{position:absolute;right:14px;top:12px}
+@media(max-width:600px){.preview-save-card{padding:18px}.preview-save-card h2{font-size:20px}}
 .site-header .brand img,.site-header .brand small{animation:none!important;transform:none!important;filter:none!important;transition:none!important}
 .site-header .brand{display:inline-flex;align-items:center;justify-content:center;line-height:1}
 .site-header .brand img{display:block;flex:0 0 auto;align-self:center;margin:0;object-position:center bottom;vertical-align:middle;transform:translateY(-3px) scale(1.18)!important;border-radius:50%;mix-blend-mode:multiply}

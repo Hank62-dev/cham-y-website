@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { toJpeg, toPng } from 'html-to-image';
-import { ArrowRight, Check, Download, ExternalLink } from 'lucide-react';
+import { ArrowRight, Check, Download } from 'lucide-react';
 import Preview from './Preview';
 import OptionTitle from '../common/OptionTitle';
 import Payment from '../common/Payment';
@@ -29,6 +30,7 @@ function Customize() {
   const [letters, setLetters] = useState('');
   const [pay, setPay] = useState(false);
   const [showSavedDetails, setShowSavedDetails] = useState(false);
+  const [previewImageUrl, setPreviewImageUrl] = useState('');
   const [validationError, setValidationError] = useState('');
   const previewRef = useRef(null);
 
@@ -100,27 +102,12 @@ function Customize() {
 
   const openPreviewImage = async () => {
     if (!previewRef.current) return;
-    const previewWindow = window.open('', '_blank');
     setShowSavedDetails(true);
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     try {
       const dataUrl = await toPng(previewRef.current, { pixelRatio: 2, backgroundColor: '#f1ebdc', cacheBust: true });
-      if (previewWindow && !previewWindow.closed) {
-        previewWindow.document.open();
-        previewWindow.document.write(`<!doctype html><html><head><title>Ảnh preview Chạm Ý</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#f1ebdc"><img src="${dataUrl}" alt="Ảnh preview Chạm Ý" style="display:block;max-width:100%;max-height:100vh;object-fit:contain"></body></html>`);
-        previewWindow.document.close();
-      } else {
-        const blob = await (await fetch(dataUrl)).blob();
-        const imageUrl = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = imageUrl;
-        link.target = '_blank';
-        link.rel = 'noreferrer';
-        link.click();
-        window.setTimeout(() => URL.revokeObjectURL(imageUrl), 60_000);
-      }
+      setPreviewImageUrl(dataUrl);
     } catch (error) {
-      previewWindow?.close();
       throw error;
     } finally {
       setShowSavedDetails(false);
@@ -140,7 +127,7 @@ function Customize() {
   }, [showSavedDetails]);
 
   return (
-    <main className="customizer">
+    <main className="customizer">{previewImageUrl && createPortal(<div className="preview-save-overlay" role="dialog" aria-modal="true" onClick={() => setPreviewImageUrl('')}><div className="preview-save-card" onClick={(event) => event.stopPropagation()}><button type="button" className="close" onClick={() => setPreviewImageUrl('')} aria-label="Đóng">×</button><p className="eyebrow">ẢNH PREVIEW</p><h2>Nhấn giữ ảnh để lưu</h2><img src={previewImageUrl} alt="Ảnh preview Chạm Ý" /><p>Trên iPhone chọn “Lưu vào Ảnh”; trên Android chọn “Tải hình ảnh xuống”.</p></div></div>, document.body)}
       <div className="custom-head"><div><p className="eyebrow">TỰ PHỐI SẢN PHẨM</p><h1>Tạo sản phẩm<br /><em>của riêng bạn.</em></h1></div><p className="custom-note">Chọn màu dây → phối charm →<br />chọn chữ và tên của bạn.</p></div>
       <div className="custom-layout">
         <div className="preview-wrap"><Preview selected={selected} letters={letters} pack="combo" previewRef={previewRef} charmOptions={specialCharms} cordColor={cordColor.value} cordColorName={cordColor.name} showDetails={showSavedDetails} arrangement={arrangement} letterStyle={letterStyle} /><div className="preview-actions"><button className="secondary" type="button" onClick={() => save('png')}><Download size={15} /> Lưu PNG</button><button className="secondary" type="button" onClick={() => save('jpg')}><Download size={15} /> Lưu JPG</button></div></div>
