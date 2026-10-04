@@ -19,7 +19,7 @@ export const getSpecialPrice = (charmCount, letters) => specialPriceTable[letter
 
 const charmNames = ['Hoa', 'Tim', 'Caro', 'Trăng', 'Mây', 'Gấu', 'Ngôi sao', 'Nơ nhỏ'];
 const charmIcons = ['✿', '♥', '▦', '☾', '☁', '♣', '★', '🎀'];
-const charmImages = [13, 14, 8, 12, 11, 10, 12, 7];
+const charmImages = [20, 21, 22, 23, 24, 25, 26, 27];
 
 // Cập nhật số lượng tồn tại đây. Dùng null khi chưa quản lý tồn kho cho mẫu đó.
 const charmStocks = [null, null, null, null, null, null, null, null];
@@ -28,7 +28,7 @@ export const charms = charmNames.map((name, index) => ({
   id: `charm-${index}`,
   name,
   icon: charmIcons[index],
-  image: `/CacLoaiCharm/${charmImages[index]}.png`,
+  image: `/Chạm ý. Charm/${charmImages[index]}.png`,
   tone: index % 2 ? 'pink' : 'lime',
   stock: charmStocks[index],
 }));
@@ -43,6 +43,15 @@ export const specialCharms = ['Bling Bling.png', 'Bright Silver.png', 'Candy Cru
     price: 9_000,
     stock: null,
   }));
+
+export const specialCharmsAssets = ['Bling Bling.png', 'Bright Silver.png', 'Candy Crush.png', 'Fluffy Guys.png', 'Hoa Hoè.png', 'Little Star.png', 'Twisted Heart.png'].map((fileName, index) => ({
+  id: `special-asset-${index + 1}`,
+  name: fileName.replace(/\.png$/i, ''),
+  image: `/ẢNH CHARM SPECIAL/${fileName}`,
+  tone: index % 2 ? 'pink' : 'lime',
+  price: 9_000,
+  stock: null,
+}));
 
 export const products = [
   {

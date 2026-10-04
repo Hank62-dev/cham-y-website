@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react';
-import { products as fallbackProducts, charms } from '../data/siteData';
+import { products as fallbackProducts, specialCharmsAssets } from '../data/siteData';
 import ProductCard from '../components/common/ProductCard';
 
 function Shop({ go, products = fallbackProducts }) {
@@ -11,7 +11,7 @@ function Shop({ go, products = fallbackProducts }) {
 }
 
 function CharmGallery() {
-  return <section className="charm-gallery"><div className="section-heading"><div><p className="eyebrow">KHO CHARM CHẠM Ý</p><h2>Nhỏ xinh,<br /><em>nhiều lựa chọn.</em></h2></div><p className="gallery-note">Mỗi chiếc charm là một điểm nhấn để món đồ thật sự thuộc về bạn.</p></div><div className="charm-gallery-grid">{charms.map((charm) => <article key={charm.id}><img src={charm.image} alt={charm.name} /><span>{charm.name}</span></article>)}</div></section>;
+  return <section className="charm-gallery"><div className="section-heading"><div><p className="eyebrow">KHO CHARM CHẠM Ý</p><h2>Nhỏ xinh,<br /><em>nhiều lựa chọn.</em></h2></div><p className="gallery-note">Mỗi chiếc charm là một điểm nhấn để món đồ thật sự thuộc về bạn.</p></div><div className="charm-gallery-grid">{specialCharmsAssets.map((charm) => <article key={charm.id}><img src={charm.image} alt={charm.name} /><span>{charm.name}</span></article>)}</div></section>;
 }
 
 export default Shop;

@@ -1,6 +1,6 @@
 import { charms } from '../../data/siteData';
 
-function Preview({ selected, letters, previewRef, charmOptions = charms, cordColor = '#ff4d5d', cordColorName = '', showDetails = false, arrangement = 'random', letterStyle = 'bubble' }) {
+function Preview({ selected, letters, previewRef, charmOptions = charms, cordColor = '#ff4d5d', cordColorName = '', showDetails = false, arrangement = 'random', letterStyle = 'bubble', onCharmClick }) {
   const enteredLetters = (letters || '').replace(/\s/g, '').slice(0, 5).split('');
   const charmSlots = [0, 1, 2];
   const letterSlots = [0, 1, 2, 3, 4];
@@ -38,7 +38,7 @@ function Preview({ selected, letters, previewRef, charmOptions = charms, cordCol
           const item = charm(index);
           const y = 450 + index * 90;
           const x = arrangement === 'random' ? [260, 282, 240][index] : 260;
-          return <g key={`charm-${index}`}><Slot x={x} y={y} value={item} fallback={index + 1} />{showDetails && item && <text x="195" y={y + 5} textAnchor="end" fontFamily={labelFont} fontSize="15" fontWeight="700" fill="#3a5a35">{item.name}</text>}</g>;
+          return <g key={`charm-${index}`} onClick={() => { if (!item) return; if (onCharmClick) onCharmClick(index); else document.dispatchEvent(new CustomEvent('cham-y-remove-charm', { detail: index })); }} style={{ cursor: item ? 'pointer' : 'default' }}><Slot x={x} y={y} value={item} fallback={index + 1} />{item && <text x="195" y={y + 5} textAnchor="end" fontFamily={labelFont} fontSize="15" fontWeight="700" fill="#3a5a35">{item.name}</text>}</g>;
         })}
         {letterSlots.map((index) => {
           const value = enteredLetters[index];

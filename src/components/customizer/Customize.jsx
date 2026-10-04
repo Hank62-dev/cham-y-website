@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toJpeg, toPng } from 'html-to-image';
 import { ArrowRight, Check, Download } from 'lucide-react';
 import Preview from './Preview';
@@ -32,19 +32,26 @@ function Customize() {
   const [validationError, setValidationError] = useState('');
   const previewRef = useRef(null);
 
+  useEffect(() => {
+    const removeCharmFromPreview = (event) => setSelected((current) => {
+      const next = [...current];
+      next[event.detail] = null;
+      return next;
+    });
+    document.addEventListener('cham-y-remove-charm', removeCharmFromPreview);
+    return () => document.removeEventListener('cham-y-remove-charm', removeCharmFromPreview);
+  }, []);
+
   const selectedCount = selected.filter(Boolean).length;
   const total = getSpecialPrice(selectedCount, letters);
-  const toggleCharm = (id) => setSelected((current) => {
-    const existingPosition = current.indexOf(id);
-    if (existingPosition >= 0) {
-      const next = [...current];
-      next[existingPosition] = null;
-      return next;
-    }
-    if (selectedCount >= 3) return current;
+  const addCharm = (id) => setSelected((current) => {
     const next = [...current];
-    const target = arrangement === 'manual' ? activePosition : current.findIndex((item) => !item);
-    next[target < 0 ? 0 : target] = id;
+    const target = arrangement === 'manual'
+      ? activePosition
+      : current.findIndex((item) => !item);
+    if (target < 0) return current;
+    if (arrangement !== 'manual' && current.filter(Boolean).length >= 3) return current;
+    next[target] = id;
     return next;
   });
 
@@ -91,7 +98,8 @@ function Customize() {
           {arrangement === 'manual' && <div className="manual-position-picker"><b>Chọn vị trí trước, sau đó chọn charm ở bước 3:</b><div>{[0, 1, 2].map((position) => { const item = specialCharms.find((charm) => charm.id === selected[position]); return <button key={position} type="button" className={activePosition === position ? 'active' : ''} onClick={() => setActivePosition(position)}><strong>{position + 1}</strong><span>{item?.name || 'Đang trống'}</span></button>; })}</div></div>}
 
           <OptionTitle no="03" title="Chọn charm Special" note="Tối thiểu 1 · tối đa 3 charm" />
-          <div className="charm-grid special-charm-grid">{specialCharms.map((charm) => { const soldOut = isOutOfStock(charm); return <button key={charm.id} type="button" disabled={soldOut} className={`charm-option ${selected.includes(charm.id) ? 'chosen' : ''} ${soldOut ? 'sold-out' : ''}`} onClick={() => toggleCharm(charm.id)}><span className={charm.tone}><img src={charm.image} alt={charm.name} /></span><b>{charm.name}</b><small>{soldOut ? 'Hết hàng' : money(charm.price)}</small>{selected.includes(charm.id) && <i><Check size={11} /></i>}</button>; })}</div>
+          <div className="charm-grid special-charm-grid">{specialCharms.map((charm) => { const soldOut = isOutOfStock(charm); const selectedAmount = selected.filter((item) => item === charm.id).length; return <button key={charm.id} type="button" disabled={soldOut} className={`charm-option ${selectedAmount ? 'chosen' : ''} ${soldOut ? 'sold-out' : ''}`} onClick={() => addCharm(charm.id)}><span className={charm.tone}><img src={charm.image} alt={charm.name} /></span><b>{charm.name}</b><small>{soldOut ? 'Hết hàng' : money(charm.price)}</small>{selectedAmount > 0 && <i>{selectedAmount}</i>}</button>; })}</div>
+          <p className="custom-note-box charm-selection-note">Bạn có thể chọn cùng một charm nhiều lần, tối đa 3 charm. <strong>Muốn đổi charm, hãy bấm vào charm đó trong phần preview để bỏ rồi chọn charm mới.</strong></p>
 
           <OptionTitle no="04" title="Chọn mẫu chữ và ghi tên" note="Tối đa 5 chữ · tiếng Anh" />
           <div className="letter-style-grid"><button type="button" className={letterStyle === 'bubble' ? 'chosen' : ''} onClick={() => setLetterStyle('bubble')}><img className="letter-style-image" src="/ẢNH MẪU CHỮ/Chữ Bong Bóng.png" alt="Mẫu chữ bong bóng" /><b>Chữ bong bóng</b></button><button type="button" className={letterStyle === 'basic' ? 'chosen' : ''} onClick={() => setLetterStyle('basic')}><img className="letter-style-image" src="/ẢNH MẪU CHỮ/Chữ Basic.png" alt="Mẫu chữ basic" /><b>Chữ basic</b></button></div>

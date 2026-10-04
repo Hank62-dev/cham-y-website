@@ -1,7 +1,7 @@
 import { ArrowRight, Check, Clock, Flower2, Heart, MoveRight, Sparkles, WandSparkles } from 'lucide-react';
 import Feature from '../components/common/Feature';
 import ProductCard from '../components/common/ProductCard';
-import { charms, products } from '../data/siteData';
+import { specialCharmsAssets, products } from '../data/siteData';
 import { asset } from '../lib/assets';
 
 function Home({ go }) {
@@ -45,7 +45,7 @@ function Home({ go }) {
         <div className="product-grid">{products.map((product) => <ProductCard product={product} go={go} key={product.id} />)}</div>
       </section>
 
-      <section className="charm-marquee"><div className="marquee-copy"><p className="eyebrow">KHO CHARM</p><h2>Nhỏ xinh,<br /><em>nhiều lựa chọn.</em></h2><p>Một chút hoa, một chút màu, một chút lấp lánh — ghép lại thành món đồ chỉ thuộc về bạn.</p><button className="secondary" onClick={() => go('customize')}>Tự chọn charm <ArrowRight size={15} /></button></div><div className="charm-orbit-grid">{charms.slice(0, 6).map((charm, index) => <div className={`charm-orbit-item charm-orbit-${index + 1}`} key={charm.id}><img src={charm.image} alt={charm.name} /><span>{charm.name}</span></div>)}</div></section>
+      <section className="charm-marquee"><div className="marquee-copy"><p className="eyebrow">KHO CHARM</p><h2>Nhỏ xinh,<br /><em>nhiều lựa chọn.</em></h2><p>Một chút hoa, một chút màu, một chút lấp lánh — ghép lại thành món đồ chỉ thuộc về bạn.</p><button className="secondary" onClick={() => go('customize')}>Tự chọn charm <ArrowRight size={15} /></button></div><div className="charm-orbit-grid">{specialCharmsAssets.slice(0, 6).map((charm, index) => <div className={`charm-orbit-item charm-orbit-${index + 1}`} key={charm.id}><img src={charm.image} alt={charm.name} /><span>{charm.name}</span></div>)}</div></section>
 
       <section className="home-final-cta"><p className="eyebrow">READY WHEN YOU ARE</p><h2>Món đồ nhỏ,<br /><em>dấu ấn thật to.</em></h2><p>Bắt đầu từ một ý tưởng rất riêng của bạn.</p><button className="primary" onClick={() => go('customize')}>Tạo món của bạn <ArrowRight size={17} /></button></section>
     </main>
