@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { adminLogin } from '../controllers/auth.controller.js';
+import { adminLogin, refreshAdminToken } from '../controllers/auth.controller.js';
 import { dashboard, exportOrders, getOrder, listOrders, updateStatus } from '../controllers/admin-order.controller.js';
 import { requireAdmin } from '../middleware/auth.middleware.js';
 import { createProduct, deleteProduct, getAdminProduct, listAdminProducts, toggleProduct, updateProduct, updateProductStock } from '../controllers/product.controller.js';
@@ -7,6 +7,7 @@ import { upload } from '../middleware/upload.middleware.js';
 
 const router = Router();
 router.post('/login', adminLogin);
+router.post('/refresh', refreshAdminToken);
 router.use(requireAdmin);
 router.get('/dashboard', dashboard);
 router.get('/orders', listOrders);

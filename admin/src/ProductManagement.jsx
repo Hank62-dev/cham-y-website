@@ -5,7 +5,7 @@ import { adjustProductStock, createProduct, deleteProduct, editProduct, getProdu
 const emptyForm = { productCode: '', name: '', slug: '', description: '', imageUrl: '', charmCount: 1, stock: 0, lowStockThreshold: 3, stockManaged: false, active: true, sortOrder: 0 };
 
 function ProductManagement({ token, onLogout }) {
-  const handleLogout = onLogout || (() => { localStorage.removeItem('cham-y-admin-token'); window.location.reload(); });
+  const handleLogout = onLogout || (() => { localStorage.removeItem('cham-y-admin-token'); localStorage.removeItem('cham-y-admin-refresh-token'); window.location.reload(); });
   const [products, setProducts] = useState([]);
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -16,6 +16,7 @@ function ProductManagement({ token, onLogout }) {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [confirm, setConfirm] = useState(null);
+  const [confirmSaving, setConfirmSaving] = useState(false);
   const [stockEditor, setStockEditor] = useState(null);
   const [lightbox, setLightbox] = useState(null);
   const [stockSaving, setStockSaving] = useState(false);
@@ -53,8 +54,10 @@ function ProductManagement({ token, onLogout }) {
 
   async function confirmAction() {
     if (!confirm) return;
+    setConfirmSaving(true);
     try { if (confirm.type === 'delete') await deleteProduct(token, confirm.product._id); else await toggleProduct(token, confirm.product._id, confirm.type === 'show'); setConfirm(null); await load(); }
     catch (e) { setError(e.message); }
+    finally { setConfirmSaving(false); }
   }
 
   async function saveStock() {
@@ -81,7 +84,7 @@ function ProductManagement({ token, onLogout }) {
     </main>
     {modal && <ProductForm modal={modal} setModal={setModal} update={updateForm} save={saveProduct} saving={saving} close={() => setModal(null)} />}
     {stockEditor && <StockModal editor={stockEditor} setEditor={setStockEditor} save={saveStock} saving={stockSaving} close={() => setStockEditor(null)} />}
-    {confirm && <ConfirmModal confirm={confirm} close={() => setConfirm(null)} submit={confirmAction} />}
+    {confirm && <ConfirmModal confirm={confirm} close={() => setConfirmSaving(false) || setConfirm(null)} submit={confirmAction} saving={confirmSaving} />}
     {lightbox && <ProductLightbox lightbox={lightbox} close={() => setLightbox(null)} />}
   </div>;
 }
@@ -108,7 +111,7 @@ function PageSizeDropdown({ value, onChange }) { const [open, setOpen] = useStat
 
 function ProductPagination({ page, pageCount, limit, total, onPage, onLimit }) { return <div className="product-pagination"><span>{total} sản phẩm · Trang {page}/{pageCount}</span><div className="product-page-size">Hiện <PageSizeDropdown value={limit} onChange={onLimit} /> sản phẩm</div><div className="product-pagination-controls"><button disabled={page <= 1} onClick={() => onPage(page - 1)}>Trước</button>{Array.from({ length: pageCount }, (_, index) => index + 1).map((number) => <button key={number} className={number === page ? 'active-page' : ''} onClick={() => onPage(number)}>{number}</button>)}<button disabled={page >= pageCount} onClick={() => onPage(page + 1)}>Sau</button></div></div>; }
 
-function ConfirmModal({ confirm, close, submit }) { const deleting = confirm.type === 'delete'; const showing = confirm.type === 'show'; return <div className="admin-modal-backdrop" onClick={close}><div className="confirm-modal" onClick={(event) => event.stopPropagation()}><button className="reject-modal-close" type="button" onClick={close}><X size={18} /></button><div className={`confirm-icon ${deleting ? 'danger' : 'warning'}`}>{deleting ? <Trash2 size={22} /> : '!'}</div><h2>{deleting ? 'Xóa sản phẩm?' : showing ? 'Đăng bán sản phẩm?' : 'Ngừng bán sản phẩm?'}</h2><p>{deleting ? `Sản phẩm “${confirm.product.name}” sẽ bị xóa khỏi hệ thống.` : showing ? `Sản phẩm “${confirm.product.name}” sẽ được hiển thị lại ở cửa hàng.` : `Sản phẩm “${confirm.product.name}” sẽ tạm ngừng hiển thị ở cửa hàng.`}</p><div className="confirm-actions"><button type="button" onClick={close}>Hủy</button><button type="button" className={deleting ? 'confirm-delete' : 'confirm-hide'} onClick={submit}>{deleting ? 'Xóa sản phẩm' : showing ? 'Đăng bán' : 'Ngừng bán'}</button></div></div></div>; }
+function ConfirmModal({ confirm, close, submit, saving }) { const deleting = confirm.type === 'delete'; const showing = confirm.type === 'show'; return <div className="admin-modal-backdrop" onClick={saving ? undefined : close}><div className="confirm-modal" onClick={(event) => event.stopPropagation()}><button className="reject-modal-close" type="button" onClick={close} disabled={saving}><X size={18} /></button><div className={`confirm-icon ${deleting ? 'danger' : 'warning'}`}>{deleting ? <Trash2 size={22} /> : '!'}</div><h2>{deleting ? 'Xóa sản phẩm?' : showing ? 'Đăng bán sản phẩm?' : 'Ngừng bán sản phẩm?'}</h2><p>{deleting ? `Sản phẩm “${confirm.product.name}” sẽ bị xóa khỏi hệ thống.` : showing ? `Sản phẩm “${confirm.product.name}” sẽ được hiển thị lại ở cửa hàng.` : `Sản phẩm “${confirm.product.name}” sẽ tạm ngừng hiển thị ở cửa hàng.`}</p><div className="confirm-actions"><button type="button" onClick={close} disabled={saving}>Hủy</button><button type="button" className={deleting ? 'confirm-delete' : 'confirm-hide'} onClick={submit} disabled={saving}>{saving && <span className="admin-spinner button-spinner" />}{saving ? 'Đang xử lý...' : deleting ? 'Xóa sản phẩm' : showing ? 'Đăng bán' : 'Ngừng bán'}</button></div></div></div>; }
 
 function StockModal({ editor, setEditor, save, saving, close }) { return <div className="admin-modal-backdrop" onClick={close}><div className="stock-modal" onClick={(event) => event.stopPropagation()}><button className="reject-modal-close" type="button" onClick={close}><X size={18} /></button><p className="eyebrow">QUẢN LÝ TỒN KHO</p><h2>{editor.product.name}</h2><p className="stock-modal-note">Nhập số lượng sản phẩm hoàn chỉnh đang có trong kho.</p><label>Số lượng tồn<input type="number" min="0" autoFocus value={editor.value} onChange={(event) => setEditor((current) => ({ ...current, value: event.target.value }))} /></label><div className="confirm-actions"><button type="button" onClick={close} disabled={saving}>Hủy</button><button type="button" className="confirm-hide" onClick={save} disabled={saving}>{saving && <span className="admin-spinner button-spinner" />} {saving ? 'Đang lưu...' : 'Lưu tồn kho'}</button></div></div></div>; }
 

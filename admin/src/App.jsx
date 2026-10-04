@@ -16,13 +16,13 @@ function App() {
   useEffect(() => { const onHashChange = () => setView(window.location.hash === '#products' ? 'products' : 'orders'); window.addEventListener('hashchange', onHashChange); return () => window.removeEventListener('hashchange', onHashChange); }, []);
   function showProducts(event) { if (window.location.hash === '#products') { event.preventDefault(); window.history.pushState({}, '', window.location.pathname); setView('orders'); return; } event.preventDefault(); window.history.pushState({}, '', '#products'); setView('products'); }
   function showOrders() { window.history.pushState({}, '', window.location.pathname); setView('orders'); }
-  if (!token) return <Login onLogin={(next) => { localStorage.setItem('cham-y-admin-token', next); setToken(next); }} />;
-  return <><a className="product-shortcut" href="#products" onClick={showProducts}>Sản phẩm & tồn kho</a>{view === 'products' ? <ProductManagement token={token} onBack={showOrders} /> : <Dashboard token={token} onLogout={() => { localStorage.removeItem('cham-y-admin-token'); setToken(null); }} />}</>;
+  if (!token) return <Login onLogin={(session) => { localStorage.setItem('cham-y-admin-token', session.token); localStorage.setItem('cham-y-admin-refresh-token', session.refreshToken); setToken(session.token); }} />;
+  return <><a className="product-shortcut" href="#products" onClick={showProducts}>Sản phẩm & tồn kho</a>{view === 'products' ? <ProductManagement token={token} onBack={showOrders} /> : <Dashboard token={token} onLogout={() => { localStorage.removeItem('cham-y-admin-token'); localStorage.removeItem('cham-y-admin-refresh-token'); setToken(null); }} />}</>;
 }
 
 function Login({ onLogin }) {
   const [password, setPassword] = useState(''); const [showPassword, setShowPassword] = useState(false); const [error, setError] = useState(''); const [loading, setLoading] = useState(false);
-  async function submit(event) { event.preventDefault(); setLoading(true); setError(''); try { const result = await login(password); onLogin(result.data.token); } catch (e) { setError(e.message); } finally { setLoading(false); } }
+  async function submit(event) { event.preventDefault(); setLoading(true); setError(''); try { const result = await login(password); onLogin(result.data); } catch (e) { setError(e.message); } finally { setLoading(false); } }
   return <main className="login-page"><form className="login-card" onSubmit={submit}><p className="eyebrow">CHẠM Ý · ADMIN</p><h1>Quản lý đơn hàng.</h1><p>Đăng nhập để xem doanh thu, kiểm tra đơn và cập nhật trạng thái xử lý.</p><div className="password-field"><input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mật khẩu admin" autoFocus /><button type="button" className="password-toggle" aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'} onClick={() => setShowPassword((current) => !current)}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div><button disabled={loading}>{loading ? 'Đang đăng nhập...' : 'Đăng nhập'}</button>{error && <div className="error">{error}</div>}</form></main>;
 }
 
