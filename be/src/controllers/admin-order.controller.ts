@@ -36,6 +36,7 @@ export async function updateStatus(req: Request, res: Response) {
   if (status === 'REJECTED' && !rejectionReason) return fail(res, 'Vui lòng nhập lý do từ chối');
   const current = await Order.findById(req.params.id);
   if (!current) return fail(res, 'Order not found', 404);
+  if (current.status === 'COMPLETED' && status === 'PENDING') return fail(res, 'Đơn hàng đã hoàn thành không thể mở lại', 400);
 
   if (status === 'REJECTED' && current.status !== 'REJECTED' && current.stockReserved) {
     for (const item of current.items.filter((value) => value.productType === 'READY')) {

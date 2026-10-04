@@ -5,7 +5,7 @@ import { getMatrixPrice } from '../config/pricing.js';
 export const orderInputSchema = z.object({
   customer: z.object({
     fullName: z.string().trim().min(2).max(120),
-    phone: z.string().trim().regex(/^(0|\+84)(3|5|7|8|9)\d{8}$/),
+    phone: z.string().trim().regex(/^(0|\+84)(3|5|7|8|9)\d{8}$/, 'Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam, ví dụ 0965488386.'),
     address: z.string().trim().min(5).max(300),
   }),
   items: z.array(z.object({
