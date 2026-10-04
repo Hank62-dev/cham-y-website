@@ -62,7 +62,7 @@ function Orders() {
     <div className="orders-list">{visibleOrders.map((order) => <article className="order-result" key={order._id}>
       <div className="order-result-head"><div><p className="eyebrow">{order.orderCode}</p><h2>{new Date(order.createdAt).toLocaleString('vi-VN')}</h2></div><span className={`status-pill ${order.status.toLowerCase()}`}>{order.status === 'PENDING' ? 'Chưa hoàn thành' : order.status === 'PROCESSING' ? 'Đang xử lý đơn' : order.status === 'REJECTED' ? 'Từ chối xử lý' : 'Đã hoàn thành'}</span></div>
       {order.rejectionReason && <p className="order-rejection-reason"><b>Lý do từ chối:</b> {order.rejectionReason}</p>}
-      {order.items.map((item) => <div className="order-result-item" key={`${order._id}-${item.productId}`}><img src={item.productImage} alt={item.productName} /><div><b>{item.productName}</b><span>{item.quantity} × {money(item.unitPrice)}</span></div><strong>{money(item.subtotal)}</strong></div>)}
+      {order.items.map((item) => <div className="order-result-item" key={`${order._id}-${item.productId}`}>{item.productType === 'CUSTOM' ? (order.previewImage?.url ? <img src={order.previewImage.url} alt="Preview sản phẩm tự phối" /> : null) : <img src={item.productImage} alt={item.productName} />}<div><b>{item.productName}</b><span>{item.quantity} × {money(item.unitPrice)}</span></div><strong>{money(item.subtotal)}</strong></div>)}
       <div className="order-result-total"><span>Tổng cộng</span><strong>{money(order.totalAmount)}</strong></div>
       {order.previewImage?.url && <img className="order-result-preview" src={order.previewImage.url} alt="Preview đơn hàng" />}
     </article>)}</div>
