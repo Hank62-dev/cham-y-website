@@ -47,7 +47,7 @@ function Header({ page, go, cartCount = 0, openCart }) {
         </nav>
 
         <button className="nav-cta" type="button" onClick={() => navigate('customize')}>
-          Tự phối ngay <span>↗</span>
+          Tự phối ngay <ArrowUpRight size={17} aria-hidden="true" />
         </button>
         <button className="cart-button" type="button" onClick={openCart} aria-label={`Mở giỏ hàng${cartCount ? `, ${cartCount} sản phẩm` : ''}`}><ShoppingCart className="cart-icon" size={20} strokeWidth={2.4} />{cartCount > 0 && <span className="cart-count" aria-label={`${cartCount} sản phẩm`}>{cartCount}</span>}</button>
       </header>
