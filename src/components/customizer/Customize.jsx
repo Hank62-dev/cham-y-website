@@ -100,15 +100,27 @@ function Customize() {
 
   const openPreviewImage = async () => {
     if (!previewRef.current) return;
+    const previewWindow = window.open('', '_blank');
     setShowSavedDetails(true);
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     try {
       const dataUrl = await toPng(previewRef.current, { pixelRatio: 2, backgroundColor: '#f1ebdc', cacheBust: true });
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.target = '_blank';
-      link.rel = 'noreferrer';
-      link.click();
+      const blob = await (await fetch(dataUrl)).blob();
+      const imageUrl = URL.createObjectURL(blob);
+      if (previewWindow && !previewWindow.closed) {
+        previewWindow.location.href = imageUrl;
+        window.setTimeout(() => URL.revokeObjectURL(imageUrl), 60_000);
+      } else {
+        const link = document.createElement('a');
+        link.href = imageUrl;
+        link.target = '_blank';
+        link.rel = 'noreferrer';
+        link.click();
+        window.setTimeout(() => URL.revokeObjectURL(imageUrl), 60_000);
+      }
+    } catch (error) {
+      previewWindow?.close();
+      throw error;
     } finally {
       setShowSavedDetails(false);
     }
