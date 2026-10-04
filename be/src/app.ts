@@ -7,6 +7,7 @@ import orderRoutes from './routes/order.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import productRoutes from './routes/product.routes.js';
+import analyticsRoutes from './routes/analytics.routes.js';
 
 export const app = express();
 app.use(helmet());
@@ -19,6 +20,7 @@ app.use(express.json({ limit: '2mb' }));
 app.get('/health', (_req, res) => res.json({ success: true, data: { status: 'ok' } }));
 app.use('/api/orders', orderRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/analytics', analyticsRoutes);
 app.use('/api/admin/login', rateLimit({ windowMs: 15 * 60 * 1000, limit: 10 }));
 app.use('/api/admin', adminRoutes);
 app.use(errorHandler);

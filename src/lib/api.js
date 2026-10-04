@@ -1,5 +1,16 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+export async function recordVisitorHeartbeat() {
+  const storageKey = 'cham-y-visitor-id';
+  let visitorId = localStorage.getItem(storageKey);
+  if (!visitorId) {
+    visitorId = window.crypto?.randomUUID?.() || `visitor-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem(storageKey, visitorId);
+  }
+  const response = await fetch(`${API_URL}/analytics/heartbeat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ visitorId }) });
+  if (!response.ok) throw new Error('Không thể ghi nhận lượt truy cập');
+}
+
 export async function fetchProducts() {
   const response = await fetch(`${API_URL}/products`);
   const result = await response.json().catch(() => null);

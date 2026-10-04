@@ -4,12 +4,14 @@ import { dashboard, exportOrders, getOrder, listOrders, updateStatus } from '../
 import { requireAdmin } from '../middleware/auth.middleware.js';
 import { createProduct, deleteProduct, getAdminProduct, listAdminProducts, toggleProduct, updateProduct, updateProductStock } from '../controllers/product.controller.js';
 import { upload } from '../middleware/upload.middleware.js';
+import { analyticsSummary } from '../controllers/analytics.controller.js';
 
 const router = Router();
 router.post('/login', adminLogin);
 router.post('/refresh', refreshAdminToken);
 router.use(requireAdmin);
 router.get('/dashboard', dashboard);
+router.get('/analytics', analyticsSummary);
 router.get('/orders', listOrders);
 router.get('/orders/export', exportOrders);
 router.get('/orders/:id', getOrder);

@@ -4,6 +4,7 @@ import { ArrowLeft, ChevronDown, ClipboardList, Download, Eye, EyeOff, Globe2, L
 import { exportOrders, getDashboard, getOrder, getOrders, login, updateStatus } from './api';
 import OrderDetailView from './OrderDetailView';
 import ProductManagement from './ProductManagement';
+import Analytics from './Analytics';
 
 const money = (value) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(value || 0);
 const date = (value) => new Date(value).toLocaleString('vi-VN');
@@ -12,15 +13,17 @@ const productImageUrl = (image) => image && /^https?:\/\//i.test(image) ? image 
 
 function App() {
   const [token, setToken] = useState(() => localStorage.getItem('cham-y-admin-token'));
-  const [view, setView] = useState(() => window.location.hash === '#products' ? 'products' : 'orders');
-  useEffect(() => { const onHashChange = () => setView(window.location.hash === '#products' ? 'products' : 'orders'); window.addEventListener('hashchange', onHashChange); return () => window.removeEventListener('hashchange', onHashChange); }, []);
+  const [view, setView] = useState(() => window.location.hash === '#products' ? 'products' : window.location.hash === '#analytics' ? 'analytics' : 'orders');
+  useEffect(() => { const onHashChange = () => setView(window.location.hash === '#products' ? 'products' : window.location.hash === '#analytics' ? 'analytics' : 'orders'); window.addEventListener('hashchange', onHashChange); return () => window.removeEventListener('hashchange', onHashChange); }, []);
   function showProducts() { if (window.location.hash === '#products') { window.history.pushState({}, '', window.location.pathname); setView('orders'); return; } window.history.pushState({}, '', '#products'); setView('products'); }
   function showOrders() { window.history.pushState({}, '', window.location.pathname); setView('orders'); }
+  function showAnalytics() { window.history.pushState({}, '', '#analytics'); setView('analytics'); }
+  const logout = () => { localStorage.removeItem('cham-y-admin-token'); localStorage.removeItem('cham-y-admin-refresh-token'); setToken(null); };
   if (!token) return <Login onLogin={(session) => { localStorage.setItem('cham-y-admin-token', session.token); localStorage.setItem('cham-y-admin-refresh-token', session.refreshToken); setToken(session.token); }} />;
-  return <><ManagementMenu view={view} onProducts={showProducts} onOrders={showOrders} /><div className="admin-view-root">{view === 'products' ? <ProductManagement token={token} onBack={showOrders} /> : <Dashboard token={token} onLogout={() => { localStorage.removeItem('cham-y-admin-token'); localStorage.removeItem('cham-y-admin-refresh-token'); setToken(null); }} />}</div></>;
+  return <><ManagementMenu view={view} onProducts={showProducts} onOrders={showOrders} onAnalytics={showAnalytics} /><div className="admin-view-root">{view === 'products' ? <ProductManagement token={token} onBack={showOrders} /> : view === 'analytics' ? <Analytics token={token} onLogout={logout} /> : <Dashboard token={token} onLogout={logout} />}</div></>;
 }
 
-function ManagementMenu({ view, onProducts, onOrders }) {
+function ManagementMenu({ view, onProducts, onOrders, onAnalytics }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
   useEffect(() => {
@@ -36,7 +39,7 @@ function ManagementMenu({ view, onProducts, onOrders }) {
     {open && <div className="management-popover">
       <button className={view === 'orders' ? 'active' : ''} type="button" onClick={() => choose(onOrders)}><ClipboardList size={16} /><span>Quản lý đơn hàng</span></button>
       <button className={view === 'products' ? 'active' : ''} type="button" onClick={() => choose(onProducts)}><Package size={16} /><span>Quản lý sản phẩm</span></button>
-      <button type="button" onClick={() => choose(() => window.open(customerSiteUrl, '_blank', 'noopener,noreferrer'))}><Globe2 size={16} /><span>Truy cập hệ thống</span></button>
+      <button className={view === 'analytics' ? 'active' : ''} type="button" onClick={() => choose(onAnalytics)}><Globe2 size={16} /><span>Truy cập hệ thống</span></button>
     </div>}
   </div>;
 }

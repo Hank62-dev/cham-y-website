@@ -12,7 +12,7 @@ import { readCart } from '../lib/cart';
 import Customize from '../components/customizer/Customize';
 import { createPath, getProductId, getRoute } from '../lib/router';
 import { products as fallbackProducts } from '../data/siteData';
-import { fetchProducts } from '../lib/api';
+import { fetchProducts, recordVisitorHeartbeat } from '../lib/api';
 
 function App() {
   const [location, setLocation] = useState(() => ({
@@ -25,6 +25,13 @@ function App() {
 
   useEffect(() => {
     fetchProducts().then((items) => { if (Array.isArray(items) && items.length) setProducts(items); }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const sendHeartbeat = () => recordVisitorHeartbeat().catch(() => {});
+    sendHeartbeat();
+    const interval = window.setInterval(sendHeartbeat, 60_000);
+    return () => window.clearInterval(interval);
   }, []);
 
   useEffect(() => {
