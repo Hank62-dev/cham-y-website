@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { toJpeg, toPng } from 'html-to-image';
-import { ArrowRight, Check, Download } from 'lucide-react';
+import { ArrowRight, Check, Download, ExternalLink } from 'lucide-react';
 import Preview from './Preview';
 import OptionTitle from '../common/OptionTitle';
 import Payment from '../common/Payment';
@@ -97,6 +97,34 @@ function Customize() {
       setShowSavedDetails(false);
     }
   };
+
+  const openPreviewImage = async () => {
+    if (!previewRef.current) return;
+    setShowSavedDetails(true);
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    try {
+      const dataUrl = await toPng(previewRef.current, { pixelRatio: 2, backgroundColor: '#f1ebdc', cacheBust: true });
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.target = '_blank';
+      link.rel = 'noreferrer';
+      link.click();
+    } finally {
+      setShowSavedDetails(false);
+    }
+  };
+
+  useEffect(() => {
+    const actions = document.querySelector('.preview-actions');
+    if (!actions || actions.querySelector('.preview-open-button')) return undefined;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'secondary preview-open-button';
+    button.textContent = 'Mở ảnh để lưu';
+    button.addEventListener('click', openPreviewImage);
+    actions.appendChild(button);
+    return () => button.remove();
+  }, [showSavedDetails]);
 
   return (
     <main className="customizer">
