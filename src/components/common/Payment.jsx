@@ -7,6 +7,9 @@ import { money } from '../../lib/formatters';
 import { createOrder } from '../../lib/api';
 import { getReadyMadePrice } from '../../data/siteData';
 
+const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_IMAGE_SIZE = 8 * 1024 * 1024;
+
 function Payment({ total, product, specialSelected = [], letters = '', orderItems = [], previewRef, customizationData = {}, close, onSuccess }) {
   const [form, setForm] = useState({ fullName: '', phone: '', address: '' });
   const [readyLetters, setReadyLetters] = useState('');
@@ -18,7 +21,7 @@ function Payment({ total, product, specialSelected = [], letters = '', orderItem
 
   const items = useMemo(() => {
     if (orderItems.length) return orderItems;
-    if (product) return [{ productId: product.id, productName: product.name, productImage: product.image, productType: 'READY', charmCount: product.charmCount, quantity: 1, unitPrice: total, customizationData: { ...customizationData, letters } }];
+    if (product) return [{ productId: product.id || product.productCode || product.slug, productName: product.name, productImage: product.image, productType: 'READY', charmCount: product.charmCount, quantity: 1, unitPrice: total, customizationData: { ...customizationData, letters } }];
     return [{ productId: 'custom-product', productName: 'Sản phẩm tự phối', productImage: '', productType: 'CUSTOM', quantity: 1, unitPrice: total, customizationData: { ...customizationData, letters, selectedCount: specialSelected.length } }];
   }, [customizationData, letters, orderItems, product, specialSelected.length, total]);
 
@@ -33,6 +36,15 @@ function Payment({ total, product, specialSelected = [], letters = '', orderItem
   const displayTotal = displayItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
   const needsReadyOptions = items.some((item) => item.productType === 'READY' && !item.customizationData?.letters);
 
+  function pickImage(event, setFile) {
+    const file = event.target.files?.[0] || null;
+    const reject = (message) => { setError(message); setFile(null); event.target.value = ''; };
+    if (file && file.type && !IMAGE_TYPES.includes(file.type)) return reject('Chỉ chấp nhận ảnh định dạng JPG, PNG hoặc WEBP.');
+    if (file && file.size > MAX_IMAGE_SIZE) return reject('Ảnh quá lớn (tối đa 8MB). Vui lòng chọn ảnh nhỏ hơn.');
+    setError('');
+    setFile(file);
+  }
+
   async function submit(event) {
     event.preventDefault(); setLoading(true); setError('');
     try {
@@ -41,8 +53,13 @@ function Payment({ total, product, specialSelected = [], letters = '', orderItem
       const submittedItems = displayItems.map((item) => item.productType === 'READY' && !item.customizationData?.letters ? { ...item, customizationData: { ...item.customizationData, letters: readyLetters } } : item);
       let generatedPreview = previewFile;
       if (!generatedPreview && previewRef?.current) {
-        const dataUrl = await toPng(previewRef.current, { pixelRatio: 2, backgroundColor: '#f1ebdc', cacheBust: true });
-        const blob = await (await fetch(dataUrl)).blob(); generatedPreview = new File([blob], 'cham-y-preview.png', { type: 'image/png' });
+        try {
+          const dataUrl = await toPng(previewRef.current, { pixelRatio: 2, backgroundColor: '#f1ebdc', cacheBust: true });
+          const blob = await (await fetch(dataUrl)).blob(); generatedPreview = new File([blob], 'cham-y-preview.png', { type: 'image/png' });
+        } catch {
+          // Sản phẩm có sẵn không cần preview; chỉ đơn tự phối mới bắt buộc phải có ảnh thiết kế.
+          if (submittedItems.some((item) => item.productType === 'CUSTOM')) throw new Error('Không thể tự tạo ảnh preview trên thiết bị này. Vui lòng lưu ảnh thiết kế rồi tải lên ở mục "Ảnh preview sản phẩm".');
+        }
       }
       const order = await createOrder({ customer: form, items: submittedItems }, { previewImage: generatedPreview, paymentProofImage: paymentProof });
       setSuccess(order.orderCode); onSuccess?.(order);
@@ -55,7 +72,7 @@ function Payment({ total, product, specialSelected = [], letters = '', orderItem
     } finally { setLoading(false); }
   }
 
-  return createPortal(<div className="modal-backdrop" role="presentation" onClick={close}><div className="payment-modal checkout-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}><button className="close" type="button" onClick={close} aria-label="Đóng"><X size={20} /></button>{success ? <div className="checkout-success"><CheckCircle2 size={46} /><p className="eyebrow">ĐẶT HÀNG THÀNH CÔNG</p><h2>Mã đơn hàng<br /><em>{success}</em></h2><p>Chạm Ý đã nhận thông tin. Bạn có thể dùng số điện thoại để tra cứu lại đơn.</p><button className="primary" onClick={close}>Đóng</button></div> : <><p className="eyebrow">XÁC NHẬN THANH TOÁN</p><h2>Hoàn tất đơn hàng.</h2><div className="checkout-summary"><b>{displayItems.length === 1 ? displayItems[0].productName : `${displayItems.length} sản phẩm trong giỏ`}</b><strong>{money(displayTotal)}</strong></div><div className="qr-payment"><a className="qr-zoom" href={asset('qr.jpg')} target="_blank" rel="noreferrer"><img src={asset('qr.jpg')} alt="Mã QR thanh toán" /></a><div className="bank-info"><strong>NGUYEN THUY VY</strong><span>TECHCOM BANK</span><span>STK: 0965 4883 86</span><small>Chuyển khoản đúng: <b>{money(displayTotal)}</b></small></div></div><div className="checkout-bill">{displayItems.map((item) => <div key={item.productId}><span>{item.productName} × {item.quantity}</span><b>{money(item.unitPrice * item.quantity)}</b></div>)}<div className="bill-total"><span>Tổng cộng</span><b>{money(displayTotal)}</b></div></div><form className="checkout-form" onSubmit={submit}>{needsReadyOptions && <><div className="checkout-section-title">Tên mong muốn <span>♡</span></div><input required minLength="2" maxLength="5" placeholder="NHẬP TÊN · 2–5 CHỮ CÁI" value={readyLetters} onChange={(event) => setReadyLetters(event.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase())} /></>}<div className="checkout-section-title">Thông tin nhận hàng <span>♡</span></div><input required placeholder="HỌ VÀ TÊN" value={form.fullName} onChange={(event) => setForm({ ...form, fullName: event.target.value })} /><input required placeholder="SỐ ĐIỆN THOẠI" value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /><textarea required placeholder="ĐỊA CHỈ NHẬN HÀNG" value={form.address} onChange={(event) => setForm({ ...form, address: event.target.value })} /><div className="checkout-section-title">Ảnh xác nhận <span>✦</span></div><label className="upload-field"><Upload size={15} /> Ảnh chuyển khoản *<input required type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => setPaymentProof(event.target.files?.[0] || null)} /></label><label className="upload-field"><Upload size={15} /> Ảnh preview sản phẩm<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => setPreviewFile(event.target.files?.[0] || null)} /></label><button className="primary" disabled={loading}>{loading ? 'Đang tạo đơn hàng...' : 'Xác nhận đã chuyển khoản'} <ArrowUpRight size={16} /></button>{error && <p className="form-error">{error}</p>}</form></>}</div></div>, document.body);
+  return createPortal(<div className="modal-backdrop" role="presentation" onClick={close}><div className="payment-modal checkout-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}><button className="close" type="button" onClick={close} aria-label="Đóng"><X size={20} /></button>{success ? <div className="checkout-success"><CheckCircle2 size={46} /><p className="eyebrow">ĐẶT HÀNG THÀNH CÔNG</p><h2>Mã đơn hàng<br /><em>{success}</em></h2><p>Chạm Ý đã nhận thông tin. Bạn có thể dùng số điện thoại để tra cứu lại đơn.</p><button className="primary" onClick={close}>Đóng</button></div> : <><p className="eyebrow">XÁC NHẬN THANH TOÁN</p><h2>Hoàn tất đơn hàng.</h2><div className="checkout-summary"><b>{displayItems.length === 1 ? displayItems[0].productName : `${displayItems.length} sản phẩm trong giỏ`}</b><strong>{money(displayTotal)}</strong></div><div className="qr-payment"><a className="qr-zoom" href={asset('qr.jpg')} target="_blank" rel="noreferrer"><img src={asset('qr.jpg')} alt="Mã QR thanh toán" /></a><div className="bank-info"><strong>NGUYEN THUY VY</strong><span>TECHCOM BANK</span><span>STK: 0965 4883 86</span><small>Chuyển khoản đúng: <b>{money(displayTotal)}</b></small></div></div><div className="checkout-bill">{displayItems.map((item, index) => <div key={`${item.productId}-${index}`}><span>{item.productName} × {item.quantity}</span><b>{money(item.unitPrice * item.quantity)}</b></div>)}<div className="bill-total"><span>Tổng cộng</span><b>{money(displayTotal)}</b></div></div><form className="checkout-form" onSubmit={submit}>{needsReadyOptions && <><div className="checkout-section-title">Tên mong muốn <span>♡</span></div><input required minLength="2" maxLength="5" placeholder="NHẬP TÊN · 2–5 CHỮ CÁI" value={readyLetters} onChange={(event) => setReadyLetters(event.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase())} /></>}<div className="checkout-section-title">Thông tin nhận hàng <span>♡</span></div><input required placeholder="HỌ VÀ TÊN" value={form.fullName} onChange={(event) => setForm({ ...form, fullName: event.target.value })} /><input required placeholder="SỐ ĐIỆN THOẠI" value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /><textarea required placeholder="ĐỊA CHỈ NHẬN HÀNG" value={form.address} onChange={(event) => setForm({ ...form, address: event.target.value })} /><div className="checkout-section-title">Ảnh xác nhận <span>✦</span></div><label className="upload-field"><Upload size={15} /> Ảnh chuyển khoản *<input required type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => pickImage(event, setPaymentProof)} /></label><label className="upload-field"><Upload size={15} /> Ảnh preview sản phẩm<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => pickImage(event, setPreviewFile)} /></label><button className="primary" disabled={loading}>{loading ? 'Đang tạo đơn hàng...' : 'Xác nhận đã chuyển khoản'} <ArrowUpRight size={16} /></button>{error && <p className="form-error">{error}</p>}</form></>}</div></div>, document.body);
 }
 
 export default Payment;

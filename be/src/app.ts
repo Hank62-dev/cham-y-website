@@ -10,6 +10,8 @@ import productRoutes from './routes/product.routes.js';
 import analyticsRoutes from './routes/analytics.routes.js';
 
 export const app = express();
+// Chạy sau proxy của Render: cần để rate limit nhận đúng IP từng người dùng thay vì IP của proxy.
+app.set('trust proxy', 1);
 app.use(helmet());
 const allowedOrigins = [env.frontendUrl, env.adminFrontendUrl]
   .filter(Boolean)

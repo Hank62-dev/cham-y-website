@@ -6,7 +6,9 @@ const initialProducts = [
   { productCode: 'sweet-love', name: 'Sweet Love', slug: 'sweet-love', description: 'Mẫu phối ngọt ngào, mềm mại và có một chút lấp lánh.', image: { url: '/SẢN PHẨM/Sweet Love.png', publicId: null }, accent: '#ed9fc0', charmCount: 3, stock: 0, stockManaged: false, sortOrder: 3 },
 ];
 
+// Chỉ seed khi chưa có sản phẩm nào, để sản phẩm mặc định đã bị admin xoá không xuất hiện lại sau mỗi lần khởi động.
 export async function seedInitialProducts() {
+  if (await Product.estimatedDocumentCount() > 0) return;
   for (const product of initialProducts) await Product.updateOne({ productCode: product.productCode }, { $setOnInsert: product }, { upsert: true });
 }
 

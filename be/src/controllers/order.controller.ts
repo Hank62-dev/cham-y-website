@@ -5,6 +5,7 @@ import { fail, ok } from '../utils/api.js';
 import { calculateOrder, orderInputSchema } from '../services/order.service.js';
 import { uploadImage } from '../services/upload.service.js';
 import { env } from '../config/env.js';
+import { phoneVariants } from '../utils/phone.js';
 import { Product } from '../models/product.model.js';
 
 function absoluteProductImage(image: string) {
@@ -39,12 +40,13 @@ export async function createOrder(req: Request, res: Response) {
   try {
     const input = parsePayload(req);
     if (input.items.some((item) => item.productType === 'CUSTOM') && input.items.length > 1) return fail(res, 'Custom product must be ordered separately');
+    const files = (req.files || {}) as { [fieldname: string]: Express.Multer.File[] };
+    if (!files.paymentProofImage?.[0]) return fail(res, 'Vui lòng tải lên ảnh chuyển khoản (JPG, PNG hoặc WEBP).');
     const calculated = await calculateOrder(input);
     calculated.items = calculated.items.map((item) => ({ ...item, productImage: absoluteProductImage(item.productImage) }));
-    const files = (req.files || {}) as { [fieldname: string]: Express.Multer.File[] };
     const previewImage = await uploadImage(files.previewImage?.[0], input.previewImageUrl);
-    const paymentProofImage = await uploadImage(files.paymentProofImage?.[0]);
-    if (!paymentProofImage) return fail(res, 'Payment proof image is required');
+    const paymentProofImage = await uploadImage(files.paymentProofImage[0]);
+    if (!paymentProofImage) return fail(res, 'Vui lòng tải lên ảnh chuyển khoản (JPG, PNG hoặc WEBP).');
     const reserved = await reserveReadyStock(calculated.items);
     try {
       const order = await Order.create({
@@ -64,14 +66,17 @@ export async function createOrder(req: Request, res: Response) {
       throw error;
     }
   } catch (error: any) {
+    if (Array.isArray(error?.issues)) {
+      console.warn('Order validation failed:', JSON.stringify(error.issues.map((issue: any) => ({ path: issue.path?.join('.'), message: issue.message }))));
+    }
     return fail(res, error?.issues?.[0]?.message || error.message || 'Cannot create order', 400);
   }
 }
 
 export async function lookupOrder(req: Request, res: Response) {
-  const phone = String(req.body.phone || '').trim();
-  if (!phone) return fail(res, 'Phone is required');
-  const orders = await Order.find({ 'customer.phone': phone }).sort({ createdAt: -1 }).lean();
+  const phones = phoneVariants(String(req.body.phone || ''));
+  if (!phones) return fail(res, 'Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam, ví dụ 0965488386.');
+  const orders = await Order.find({ 'customer.phone': { $in: phones } }).sort({ createdAt: -1 }).lean();
   if (!orders.length) return fail(res, 'Không tìm thấy đơn hàng với số điện thoại này', 404);
   return ok(res, orders);
 }
