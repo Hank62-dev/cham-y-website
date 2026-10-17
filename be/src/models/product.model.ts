@@ -13,7 +13,7 @@ const productSchema = new Schema({
   type: { type: String, enum: ['READY'], default: 'READY', required: true },
   image: { type: imageSchema, required: true },
   accent: { type: String, default: '#f2ecdd' },
-  charmCount: { type: Number, min: 1, max: 3, required: true },
+  charmCount: { type: Number, min: 0, max: 3, required: true },
   stock: { type: Number, min: 0, default: 0 },
   stockManaged: { type: Boolean, default: false },
   lowStockThreshold: { type: Number, min: 0, default: 3 },

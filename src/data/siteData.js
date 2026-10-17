@@ -1,18 +1,14 @@
-export const charmPrice = 9_000;
+export const MIN_LETTERS = 2;
+export const MAX_LETTERS = 6;
+export const MAX_CHARMS = 3;
 
-// Bảng giá tên theo số ký tự trong note sản phẩm.
-export const namePrices = {
-  2: 49_000,
-  3: 58_000,
-  4: 67_000,
-  5: 76_000,
-};
-
+// Bảng giá theo số chữ (hàng) và số charm (cột, 0–3). Phải khớp be/src/config/pricing.ts.
 export const specialPriceTable = {
-  2: { 1: 86_000, 2: 88_000, 3: 89_000 },
-  3: { 1: 87_000, 2: 89_000, 3: 91_000 },
-  4: { 1: 89_000, 2: 90_000, 3: 92_000 },
-  5: { 1: 90_000, 2: 92_000, 3: 94_000 },
+  2: { 0: 84_000, 1: 86_000, 2: 88_000, 3: 89_000 },
+  3: { 0: 86_000, 1: 87_000, 2: 89_000, 3: 91_000 },
+  4: { 0: 87_000, 1: 89_000, 2: 90_000, 3: 92_000 },
+  5: { 0: 89_000, 1: 90_000, 2: 92_000, 3: 94_000 },
+  6: { 0: 90_000, 1: 92_000, 2: 93_000, 3: 95_000 },
 };
 
 export const getSpecialPrice = (charmCount, letters) => specialPriceTable[letters.length]?.[charmCount] ?? 0;
@@ -35,7 +31,9 @@ export const charms = charmNames.map((name, index) => ({
 
 export const isOutOfStock = (item) => item?.stock !== null && item?.stock <= 0;
 
-export const specialCharms = ['Bling Bling.png', 'Bright Silver.png', 'Candy Crush.png', 'Fluffy Guys.png', 'Hoa Hoè.png', 'Little Star.png', 'Twisted Heart.png'].map((fileName, index) => ({
+const specialCharmFiles = ['Bling Bling.png', 'Bright Silver.png', 'Candy Crush.png', 'Fluffy Guys.png', 'Little Star.png', 'Tiny Flame.png'];
+
+export const specialCharms = specialCharmFiles.map((fileName, index) => ({
     id: `special-${fileName.replace(/\.png$/i, '').toLowerCase().replace(/\s+/g, '-')}`,
     name: fileName.replace(/\.png$/i, ''),
     image: `/ẢNH CHARM SPECIAL/${fileName}`,
@@ -44,7 +42,7 @@ export const specialCharms = ['Bling Bling.png', 'Bright Silver.png', 'Candy Cru
     stock: null,
   }));
 
-export const specialCharmsAssets = ['Bling Bling.png', 'Bright Silver.png', 'Candy Crush.png', 'Fluffy Guys.png', 'Hoa Hoè.png', 'Little Star.png', 'Twisted Heart.png'].map((fileName, index) => ({
+export const specialCharmsAssets = specialCharmFiles.map((fileName, index) => ({
   id: `special-asset-${index + 1}`,
   name: fileName.replace(/\.png$/i, ''),
   image: `/ẢNH CHARM SPECIAL/${fileName}`,

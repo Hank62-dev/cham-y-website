@@ -309,7 +309,7 @@ nav button{font-size:14px}
 .preview-cord span{display:block;width:42px;height:10px;margin:0 auto 9px;border-radius:999px;box-shadow:0 3px 0 #0002}
 .tree-arm>b{font-size:9px}
 @media(max-width:480px){.tree-arms{padding-right:24%;gap:5px}.tree-arm:nth-child(3){width:24%;min-height:270px}.tree-arm:nth-child(3) .preview-cord{font-size:7px;margin-top:32px}.preview-cord span{width:31px;height:8px}}
-@media(max-width:560px){.color-choice-grid,.arrangement-grid,.letter-style-grid,.special-charm-grid{grid-template-columns:1fr 1fr}.special-charm-grid .charm-option:last-child{grid-column:1/-1;max-width:50%;justify-self:center}}
+@media(max-width:560px){.color-choice-grid,.arrangement-grid,.letter-style-grid,.special-charm-grid{grid-template-columns:1fr 1fr}}
 .custom-step-note,.custom-step-placeholder{padding:15px 16px;background:#f2ecdd;border:1px solid #e3dac7;border-radius:12px;color:#68766c;font-size:12px;line-height:1.6}
 .custom-static-choice{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--green)}
 .custom-static-choice b{font-size:11px;letter-spacing:.08em}.custom-static-choice span{color:#89938b;font-size:10px}

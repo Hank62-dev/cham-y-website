@@ -22,7 +22,7 @@ export const orderInputSchema = z.object({
 
 async function serverUnitPrice(item: z.infer<typeof orderInputSchema>['items'][number], product?: any) {
   if (item.productType === 'CUSTOM') {
-    const count = Number((item.customizationData as { selectedCount?: number } | undefined)?.selectedCount || 1);
+    const count = Number((item.customizationData as { selectedCount?: number } | undefined)?.selectedCount ?? 0);
     const letters = String((item.customizationData as { letters?: string } | undefined)?.letters || '').length;
     return getMatrixPrice(letters, count);
   }

@@ -5,7 +5,7 @@ import { ArrowRight, Check, Download } from 'lucide-react';
 import Preview from './Preview';
 import OptionTitle from '../common/OptionTitle';
 import Payment from '../common/Payment';
-import { getSpecialPrice, isOutOfStock, specialCharms } from '../../data/siteData';
+import { getSpecialPrice, isOutOfStock, specialCharms, MAX_CHARMS, MAX_LETTERS, MIN_LETTERS } from '../../data/siteData';
 import { money } from '../../lib/formatters';
 
 const cordColors = [
@@ -52,15 +52,14 @@ function Customize() {
       ? activePosition
       : current.findIndex((item) => !item);
     if (target < 0) return current;
-    if (arrangement !== 'manual' && current.filter(Boolean).length >= 3) return current;
+    if (arrangement !== 'manual' && current.filter(Boolean).length >= MAX_CHARMS) return current;
     next[target] = id;
     return next;
   });
 
   const submit = () => {
     const missing = [];
-    if (selectedCount < 1) missing.push('chọn ít nhất 1 charm Special');
-    if (letters.length < 2 || letters.length > 5) missing.push('nhập tên từ 2–5 chữ cái tiếng Anh');
+    if (letters.length < MIN_LETTERS || letters.length > MAX_LETTERS) missing.push(`nhập tên từ ${MIN_LETTERS}–${MAX_LETTERS} chữ cái tiếng Anh`);
     if (missing.length) {
       setValidationError(`Vui lòng ${missing.join('; ')}.`);
       return;
@@ -140,14 +139,14 @@ function Customize() {
           <div className="arrangement-grid"><button type="button" className={arrangement === 'manual' ? 'chosen' : ''} onClick={() => { setArrangement('manual'); setActivePosition(0); }}><b>Tự sắp xếp charm</b><small>Bạn chủ động chọn vị trí.</small></button><button type="button" className={arrangement === 'random' ? 'chosen' : ''} onClick={() => setArrangement('random')}><b>Làm sẵn random vị trí charm</b><small>Chạm Ý phối ngẫu nhiên.</small></button></div>
           {arrangement === 'manual' && <div className="manual-position-picker"><b>Chọn vị trí trước, sau đó chọn charm ở bước 3:</b><div>{[0, 1, 2].map((position) => { const item = specialCharms.find((charm) => charm.id === selected[position]); return <button key={position} type="button" className={activePosition === position ? 'active' : ''} onClick={() => setActivePosition(position)}><strong>{position + 1}</strong><span>{item?.name || 'Đang trống'}</span></button>; })}</div></div>}
 
-          <OptionTitle no="03" title="Chọn charm Special" note="Tối thiểu 1 · tối đa 3 charm" />
-          <div className="charm-grid special-charm-grid">{specialCharms.map((charm) => { const soldOut = isOutOfStock(charm); const selectedAmount = selected.filter((item) => item === charm.id).length; return <button key={charm.id} type="button" disabled={soldOut} className={`charm-option ${selectedAmount ? 'chosen' : ''} ${soldOut ? 'sold-out' : ''}`} onClick={() => addCharm(charm.id)}><span className={charm.tone}><img src={charm.image} alt={charm.name} /></span><b>{charm.name}</b><small>{soldOut ? 'Hết hàng' : money(charm.price)}</small>{selectedAmount > 0 && <i>{selectedAmount}</i>}</button>; })}</div>
+          <OptionTitle no="03" title="Chọn charm Special" note="Không bắt buộc · tối đa 3 charm" />
+          <div className="charm-grid special-charm-grid">{specialCharms.map((charm) => { const soldOut = isOutOfStock(charm); const selectedAmount = selected.filter((item) => item === charm.id).length; return <button key={charm.id} type="button" disabled={soldOut} className={`charm-option ${selectedAmount ? 'chosen' : ''} ${soldOut ? 'sold-out' : ''}`} onClick={() => addCharm(charm.id)}><span className={charm.tone}><img src={charm.image} alt={charm.name} /></span><b>{charm.name}</b>{soldOut && <small>Hết hàng</small>}{selectedAmount > 0 && <i>{selectedAmount}</i>}</button>; })}</div>
           <p className="custom-note-box charm-selection-note">Bạn có thể chọn cùng một charm nhiều lần, tối đa 3 charm. <strong>Muốn đổi charm, hãy bấm vào charm đó trong phần preview để bỏ rồi chọn charm mới.</strong></p>
 
-          <OptionTitle no="04" title="Chọn mẫu chữ và ghi tên" note="Tối đa 5 chữ · tiếng Anh" />
+          <OptionTitle no="04" title="Chọn mẫu chữ và ghi tên" note="Từ 2 đến 6 chữ · tiếng Anh" />
           <div className="letter-style-grid"><button type="button" className={letterStyle === 'bubble' ? 'chosen' : ''} onClick={() => setLetterStyle('bubble')}><img className="letter-style-image" src="/ẢNH MẪU CHỮ/Chữ Bong Bóng.png" alt="Mẫu chữ bong bóng" /><b>Chữ bong bóng</b></button><button type="button" className={letterStyle === 'basic' ? 'chosen' : ''} onClick={() => setLetterStyle('basic')}><img className="letter-style-image" src="/ẢNH MẪU CHỮ/Chữ Basic.png" alt="Mẫu chữ basic" /><b>Chữ basic</b></button></div>
-          <input className="name-input" maxLength="5" value={letters} onChange={(event) => setLetters(event.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase())} placeholder="NHẬP 2–5 CHỮ CÁI TIẾNG ANH" />
-          {letters.length >= 2 && <div className="name-price-hint">{selectedCount} charm · {letters.length} chữ · {money(total)}</div>}
+          <input className="name-input" maxLength={MAX_LETTERS} value={letters} onChange={(event) => setLetters(event.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase())} placeholder="NHẬP 2–6 CHỮ CÁI TIẾNG ANH" />
+          {letters.length >= MIN_LETTERS && <div className="name-price-hint">{selectedCount} charm · {letters.length} chữ · {money(total)}</div>}
 
           <OptionTitle no="05" title="Thanh toán" note="Kiểm tra lại trước khi gửi đơn" />
           <div className="running-total"><span>Tạm tính</span><strong>{money(total)}</strong></div>

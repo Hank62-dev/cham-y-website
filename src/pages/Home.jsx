@@ -37,7 +37,7 @@ function Home({ go }) {
 
       <section className="customizer-spotlight">
         <div className="spotlight-visual"><img src={asset('so-do-moc-khoa.svg')} alt="Sơ đồ mô phỏng món móc khóa tự phối" /><span className="spotlight-badge"><WandSparkles size={15} /> made by you</span></div>
-        <div className="spotlight-copy"><p className="eyebrow">TỰ PHỐI NGAY</p><h2>Mỗi lựa chọn<br /><em>là một câu chuyện.</em></h2><p>Chọn màu dây, mix charm, thêm chữ cái và sắp xếp theo cách của riêng bạn. Không cần biết thiết kế — Chạm Ý đã chuẩn bị sẵn mọi thứ để bạn bắt đầu thật vui.</p><div className="spotlight-points"><span><Check size={15} /> Chọn charm yêu thích</span><span><Check size={15} /> Nhập tên riêng 2–5 chữ</span><span><Check size={15} /> Xem preview trước khi đặt</span></div><button className="primary" onClick={() => go('customize')}>Bắt đầu tự phối <ArrowRight size={17} /></button></div>
+        <div className="spotlight-copy"><p className="eyebrow">TỰ PHỐI NGAY</p><h2>Mỗi lựa chọn<br /><em>là một câu chuyện.</em></h2><p>Chọn màu dây, mix charm, thêm chữ cái và sắp xếp theo cách của riêng bạn. Không cần biết thiết kế — Chạm Ý đã chuẩn bị sẵn mọi thứ để bạn bắt đầu thật vui.</p><div className="spotlight-points"><span><Check size={15} /> Chọn charm yêu thích</span><span><Check size={15} /> Nhập tên riêng 2–6 chữ</span><span><Check size={15} /> Xem preview trước khi đặt</span></div><button className="primary" onClick={() => go('customize')}>Bắt đầu tự phối <ArrowRight size={17} /></button></div>
       </section>
 
       <section className="home-products">

@@ -1,9 +1,9 @@
 import { charms } from '../../data/siteData';
 
 function Preview({ selected, letters, previewRef, charmOptions = charms, cordColor = '#ff4d5d', cordColorName = '', showDetails = false, arrangement = 'random', letterStyle = 'bubble', onCharmClick }) {
-  const enteredLetters = (letters || '').replace(/\s/g, '').slice(0, 5).split('');
+  const enteredLetters = (letters || '').replace(/\s/g, '').slice(0, 6).split('');
   const charmSlots = [0, 1, 2];
-  const letterSlots = [0, 1, 2, 3, 4];
+  const letterSlots = [0, 1, 2, 3, 4, 5];
   const labelFont = "'DM Sans', 'Helvetica Neue', Arial, sans-serif";
   const charm = (index) => charmOptions.find((item) => item.id === selected[index]);
 
@@ -42,7 +42,7 @@ function Preview({ selected, letters, previewRef, charmOptions = charms, cordCol
         })}
         {letterSlots.map((index) => {
           const value = enteredLetters[index];
-          const y = 420 + index * 76;
+          const y = 416 + index * 66;
           return <Slot key={`letter-${index}`} x={540} y={y} value={value ? { name: value, letter: value } : null} fallback={index + 1} filled={Boolean(value)} letterStyle={letterStyle} />;
         })}
 
@@ -51,9 +51,9 @@ function Preview({ selected, letters, previewRef, charmOptions = charms, cordCol
         <Tassel x={690} y={835} color={cordColor} />
 
         <text x="260" y="945" textAnchor="middle" fontFamily={labelFont} fontSize="18" fontWeight="700" fill="#3a5a35">Charm</text>
-        <text x="260" y="968" textAnchor="middle" fontFamily={labelFont} fontSize="15" fill="#3a5a35">tối thiểu 1 · tối đa 3</text>
+        <text x="260" y="968" textAnchor="middle" fontFamily={labelFont} fontSize="15" fill="#3a5a35">tối đa 3 · có thể bỏ trống</text>
         <text x="540" y="945" textAnchor="middle" fontFamily={labelFont} fontSize="18" fontWeight="700" fill="#3a5a35">Chữ</text>
-        <text x="540" y="968" textAnchor="middle" fontFamily={labelFont} fontSize="15" fill="#3a5a35">tối thiểu 2 · tối đa 5</text>
+        <text x="540" y="968" textAnchor="middle" fontFamily={labelFont} fontSize="15" fill="#3a5a35">tối thiểu 2 · tối đa 6</text>
         <text x="690" y="945" textAnchor="middle" fontFamily={labelFont} fontSize="18" fontWeight="700" fill="#3a5a35">Dây phụ</text>
         <text x="690" y="968" textAnchor="middle" fontFamily={labelFont} fontSize="15" fill="#3a5a35">phối theo màu dây</text>
       </svg>
