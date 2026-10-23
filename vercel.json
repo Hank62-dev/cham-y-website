@@ -1,4 +1,26 @@
 {
+  "redirects": [
+    {
+      "source": "/fb",
+      "destination": "/?utm_source=facebook&utm_medium=social&utm_campaign=october2026",
+      "permanent": false
+    },
+    {
+      "source": "/ig",
+      "destination": "/?utm_source=instagram&utm_medium=social&utm_campaign=october2026",
+      "permanent": false
+    },
+    {
+      "source": "/tt",
+      "destination": "/?utm_source=tiktok&utm_medium=social&utm_campaign=october2026",
+      "permanent": false
+    },
+    {
+      "source": "/th",
+      "destination": "/?utm_source=threads&utm_medium=social&utm_campaign=october2026",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
