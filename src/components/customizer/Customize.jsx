@@ -26,7 +26,7 @@ function Customize() {
   const [arrangement, setArrangement] = useState('random');
   const [selected, setSelected] = useState([null, null, null]);
   const [activePosition, setActivePosition] = useState(0);
-  const [letterStyle, setLetterStyle] = useState('bubble');
+  const [letterStyle, setLetterStyle] = useState('basic');
   const [letters, setLetters] = useState('');
   const [pay, setPay] = useState(false);
   const [showSavedDetails, setShowSavedDetails] = useState(false);
@@ -144,7 +144,7 @@ function Customize() {
           <p className="custom-note-box charm-selection-note">Bạn có thể chọn cùng một charm nhiều lần, tối đa 3 charm. <strong>Muốn đổi charm, hãy bấm vào charm đó trong phần preview để bỏ rồi chọn charm mới.</strong></p>
 
           <OptionTitle no="04" title="Chọn mẫu chữ và ghi tên" note="Từ 2 đến 6 chữ · tiếng Anh" />
-          <div className="letter-style-grid"><button type="button" className={letterStyle === 'bubble' ? 'chosen' : ''} onClick={() => setLetterStyle('bubble')}><img className="letter-style-image" src="/ẢNH MẪU CHỮ/Chữ Bong Bóng.png" alt="Mẫu chữ bong bóng" /><b>Chữ bong bóng</b></button><button type="button" className={letterStyle === 'basic' ? 'chosen' : ''} onClick={() => setLetterStyle('basic')}><img className="letter-style-image" src="/ẢNH MẪU CHỮ/Chữ Basic.png" alt="Mẫu chữ basic" /><b>Chữ basic</b></button></div>
+          <div className="letter-style-grid"><button type="button" className="chosen" onClick={() => setLetterStyle('basic')}><img className="letter-style-image" src="/ẢNH MẪU CHỮ/Chữ Basic.png" alt="Mẫu chữ basic" /><b>Chữ basic</b></button></div>
           <input className="name-input" maxLength={MAX_LETTERS} value={letters} onChange={(event) => setLetters(event.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase())} placeholder="NHẬP 2–6 CHỮ CÁI TIẾNG ANH" />
           {letters.length >= MIN_LETTERS && <div className="name-price-hint">{selectedCount} charm · {letters.length} chữ · {money(total)}</div>}
 
